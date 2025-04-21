@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   AppBar,
@@ -13,10 +13,7 @@ import {
   Container,
   Popper,
   Paper,
-  Grow,
-  ClickAwayListener,
   InputBase,
-  Fade,
   Grid,
   Divider,
   List,
@@ -34,6 +31,7 @@ import {
   KeyboardArrowDown as ArrowDownIcon,
   Search as SearchIcon,
   Close as CloseIcon,
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 
 function Header() {
@@ -42,6 +40,49 @@ function Header() {
   const [categoryMenuAnchor, setCategoryMenuAnchor] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [cartAnchorEl, setCartAnchorEl] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const searchRef = useRef(null);
+
+  // Add refs for hover functionality
+  const profileRef = useRef(null);
+  const cartRef = useRef(null);
+  const categoryRef = useRef(null);
+
+  // Hover handlers for profile menu
+  const handleProfileMouseEnter = (event) => {
+    setAnchorEl(profileRef.current);
+  };
+
+  const handleProfileMouseLeave = () => {
+    setAnchorEl(null);
+  };
+
+  // Hover handlers for cart menu
+  const handleCartMouseEnter = (event) => {
+    setCartAnchorEl(cartRef.current);
+  };
+
+  const handleCartMouseLeave = () => {
+    setCartAnchorEl(null);
+  };
+
+  // Hover handlers for category menu
+  const handleCategoryMouseEnter = (event) => {
+    setCategoryMenuAnchor(categoryRef.current);
+  };
+
+  const handleCategoryMouseLeave = () => {
+    setCategoryMenuAnchor(null);
+  };
+
+  // Mock search results (will be from API later)
+  const mockProducts = [
+    { id: 1, name: 'Gaming Laptop', price: 1299.99, category: 'Laptops' },
+    { id: 2, name: 'Wireless Mouse', price: 29.99, category: 'Accessories' },
+    { id: 3, name: 'Mechanical Keyboard', price: 129.99, category: 'Accessories' },
+    // Add more mock products
+  ];
 
   // Categories data (will be fetched from backend later)
   const categories = [
@@ -66,7 +107,7 @@ function Header() {
   ];
 
   // Mock cart items (will be from Redux later)
-  const cartItems = [
+  const [cartItems, setCartItems] = useState([
     {
       id: 1,
       name: 'Wireless Headphones',
@@ -81,8 +122,35 @@ function Header() {
       image: 'https://via.placeholder.com/50x50',
       quantity: 1,
     },
-  ];
+  ]);
 
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query.trim()) {
+      // Filter mock products (will be API call later)
+      const results = mockProducts.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query.toLowerCase()) ||
+          product.category.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleRemoveFromCart = (itemId) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
+  };
+
+  const handleClickAway = () => {
+    setSearchResults([]);
+    setSearchQuery('');
+    setIsSearchOpen(false);
+  };
+// eslint-disable-next-line
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -90,11 +158,11 @@ function Header() {
   const handleMobileMenuOpen = (event) => {
     setMobileMenuAnchorEl(event.currentTarget);
   };
-
+// eslint-disable-next-line
   const handleCategoryMenuOpen = (event) => {
     setCategoryMenuAnchor(event.currentTarget);
   };
-
+// eslint-disable-next-line
   const handleCartOpen = (event) => {
     setCartAnchorEl(event.currentTarget);
   };
@@ -150,89 +218,85 @@ function Header() {
           {/* Desktop Navigation */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* Categories Mega Menu */}
-            <Button
-              color="inherit"
-              onClick={handleCategoryMenuOpen}
-              endIcon={<ArrowDownIcon />}
+            <Box
+              ref={categoryRef}
+              onMouseEnter={handleCategoryMouseEnter}
+              onMouseLeave={handleCategoryMouseLeave}
             >
-              Categories
-            </Button>
-            <Popper
-              open={Boolean(categoryMenuAnchor)}
-              anchorEl={categoryMenuAnchor}
-              placement="bottom-start"
-              transition
-              disablePortal
-              style={{ zIndex: 1301 }}
-            >
-              {({ TransitionProps }) => (
-                <Grow {...TransitionProps}>
-                  <Paper sx={{ width: '800px', maxWidth: '100%' }}>
-                    <ClickAwayListener onClickAway={handleMenuClose}>
-                      <Box p={2}>
-                        <Grid container spacing={2}>
-                          {categories.map((category) => (
-                            <Grid item xs={4} key={category.id}>
-                              <Typography variant="h6" gutterBottom>
-                                {category.name}
-                              </Typography>
-                              <List dense>
-                                {category.subcategories.map((sub) => (
-                                  <ListItem
-                                    button
-                                    key={sub}
-                                    component={RouterLink}
-                                    to={`/products?category=${category.name.toLowerCase()}&subcategory=${sub.toLowerCase()}`}
-                                    onClick={handleMenuClose}
-                                  >
-                                    <ListItemText primary={sub} />
-                                  </ListItem>
-                                ))}
-                              </List>
-                              <Divider />
-                              <Typography
-                                variant="subtitle2"
-                                color="textSecondary"
-                                sx={{ mt: 1 }}
+              <Button
+                color="inherit"
+                endIcon={<ArrowDownIcon />}
+              >
+                Danh mục
+              </Button>
+              <Popper
+                open={Boolean(categoryMenuAnchor)}
+                anchorEl={categoryMenuAnchor}
+                placement="bottom-start"
+                style={{ zIndex: 1301 }}
+              >
+                <Paper sx={{ width: '800px', maxWidth: '100%' }}>
+                  <Box p={2}>
+                    <Grid container spacing={2}>
+                      {categories.map((category) => (
+                        <Grid item xs={4} key={category.id}>
+                          <Typography variant="h6" gutterBottom>
+                            {category.name}
+                          </Typography>
+                          <List dense>
+                            {category.subcategories.map((sub) => (
+                              <ListItem
+                                button
+                                key={sub}
+                                component={RouterLink}
+                                to={`/products?category=${category.name.toLowerCase()}&subcategory=${sub.toLowerCase()}`}
+                                onClick={handleMenuClose}
                               >
-                                Popular Brands
-                              </Typography>
-                              <List dense>
-                                {category.brands.map((brand) => (
-                                  <ListItem
-                                    button
-                                    key={brand}
-                                    component={RouterLink}
-                                    to={`/products?brand=${brand.toLowerCase()}`}
-                                    onClick={handleMenuClose}
-                                  >
-                                    <ListItemText primary={brand} />
-                                  </ListItem>
-                                ))}
-                              </List>
-                            </Grid>
-                          ))}
+                                <ListItemText primary={sub} />
+                              </ListItem>
+                            ))}
+                          </List>
+                          <Divider />
+                          <Typography
+                            variant="subtitle2"
+                            color="textSecondary"
+                            sx={{ mt: 1 }}
+                          >
+                            Thương hiệu phổ biến
+                          </Typography>
+                          <List dense>
+                            {category.brands.map((brand) => (
+                              <ListItem
+                                button
+                                key={brand}
+                                component={RouterLink}
+                                to={`/products?brand=${brand.toLowerCase()}`}
+                                onClick={handleMenuClose}
+                              >
+                                <ListItemText primary={brand} />
+                              </ListItem>
+                            ))}
+                          </List>
                         </Grid>
-                      </Box>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+                      ))}
+                    </Grid>
+                  </Box>
+                </Paper>
+              </Popper>
+            </Box>
 
             <Button color="inherit" component={RouterLink} to="/products">
-              All Products
+              Sản phẩm
             </Button>
-            <Button color="inherit" component={RouterLink} to="/deals">
-              Deals
-            </Button>
+
             <Button color="inherit" component={RouterLink} to="/contact">
-              Contact
+              Liên hệ
             </Button>
           </Box>
 
-          {/* Search Bar */}
+          {/* Search Bar with Results */}
           <Box
+            ref={searchRef}
             sx={{
               position: 'relative',
               flexGrow: isSearchOpen ? 1 : 0,
@@ -248,16 +312,51 @@ function Header() {
             }}
           >
             {isSearchOpen && (
-              <InputBase
-                placeholder="Search products..."
-                sx={{
-                  color: 'inherit',
-                  padding: '4px 8px',
-                  paddingLeft: '1rem',
-                  flex: 1,
-                }}
-                autoFocus
-              />
+              <>
+                <InputBase
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  sx={{
+                    color: 'inherit',
+                    padding: '4px 8px',
+                    paddingLeft: '1rem',
+                    flex: 1,
+                  }}
+                  autoFocus
+                />
+                {searchResults.length > 0 && (
+                  <Paper
+                    sx={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      right: 0,
+                      zIndex: 1300,
+                      mt: 1,
+                      maxHeight: '400px',
+                      overflow: 'auto',
+                    }}
+                  >
+                    <List>
+                      {searchResults.map((product) => (
+                        <ListItem
+                          key={product.id}
+                          component={RouterLink}
+                          to={`/products/${product.id}`}
+                          onClick={handleClickAway}
+                          button
+                        >
+                          <ListItemText
+                            primary={product.name}
+                            secondary={`$${product.price} - ${product.category}`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Paper>
+                )}
+              </>
             )}
             <IconButton color="inherit" onClick={toggleSearch}>
               {isSearchOpen ? <CloseIcon /> : <SearchIcon />}
@@ -266,103 +365,120 @@ function Header() {
 
           {/* Cart and Profile Icons */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              color="inherit"
-              onClick={handleCartOpen}
-              aria-label="cart"
+            <Box
+              ref={cartRef}
+              onMouseEnter={handleCartMouseEnter}
+              onMouseLeave={handleCartMouseLeave}
             >
-              <Badge badgeContent={cartItems.length} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+              <IconButton
+                color="inherit"
+                aria-label="cart"
+              >
+                <Badge badgeContent={cartItems.length} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
 
-            {/* Cart Preview Popup */}
-            <Popper
-              open={Boolean(cartAnchorEl)}
-              anchorEl={cartAnchorEl}
-              placement="bottom-end"
-              transition
-              disablePortal
-              style={{ zIndex: 1301 }}
-            >
-              {({ TransitionProps }) => (
-                <Fade {...TransitionProps}>
-                  <Paper sx={{ width: '350px', maxWidth: '100%' }}>
-                    <Box p={2}>
-                      <Typography variant="h6" gutterBottom>
-                        Shopping Cart
-                      </Typography>
-                      {cartItems.map((item) => (
-                        <Card key={item.id} sx={{ mb: 1, display: 'flex' }}>
-                          <CardMedia
-                            component="img"
-                            sx={{ width: 50, height: 50, objectFit: 'cover' }}
-                            image={item.image}
-                            alt={item.name}
-                          />
-                          <CardContent sx={{ flex: 1, py: 1 }}>
-                            <Typography variant="subtitle2">{item.name}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {item.quantity} × ${item.price}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      ))}
-                      <Divider sx={{ my: 1 }} />
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          mb: 2,
-                        }}
-                      >
-                        <Typography variant="subtitle1">Total:</Typography>
-                        <Typography variant="subtitle1">
-                          ${cartTotal.toFixed(2)}
+              <Menu
+                anchorEl={cartAnchorEl}
+                open={Boolean(cartAnchorEl)}
+                onClose={() => setCartAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: { width: '350px', maxWidth: '100%' },
+                  onMouseEnter: handleCartMouseEnter,
+                  onMouseLeave: handleCartMouseLeave,
+                }}
+              >
+                <Box p={2}>
+                  <Typography variant="h6" gutterBottom>
+                    Shopping Cart ({cartItems.length} items)
+                  </Typography>
+                  {cartItems.map((item) => (
+                    <Card key={item.id} sx={{ mb: 1, display: 'flex' }}>
+                      <CardMedia
+                        component="img"
+                        sx={{ width: 50, height: 50, objectFit: 'cover' }}
+                        image={item.image}
+                        alt={item.name}
+                      />
+                      <CardContent sx={{ flex: 1, py: 1, pr: 1 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="subtitle2">{item.name}</Typography>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleRemoveFromCart(item.id)}
+                            sx={{ ml: 1, p: 0.5 }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.quantity} × ${item.price}
                         </Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        component={RouterLink}
-                        to="/cart"
-                        onClick={handleMenuClose}
-                      >
-                        View Cart
-                      </Button>
-                    </Box>
-                  </Paper>
-                </Fade>
-              )}
-            </Popper>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  <Divider sx={{ my: 1 }} />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 2,
+                    }}
+                  >
+                    <Typography variant="subtitle1">Total:</Typography>
+                    <Typography variant="subtitle1">
+                      ${cartTotal.toFixed(2)}
+                    </Typography>
+                  </Box>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    component={RouterLink}
+                    to="/cart"
+                    onClick={() => setCartAnchorEl(null)}
+                  >
+                    View Cart
+                  </Button>
+                </Box>
+              </Menu>
+            </Box>
 
-            <IconButton color="inherit" onClick={handleProfileMenuOpen}>
-              <PersonIcon />
-            </IconButton>
+            <Box
+              ref={profileRef}
+              onMouseEnter={handleProfileMouseEnter}
+              onMouseLeave={handleProfileMouseLeave}
+            >
+              <IconButton color="inherit">
+                <PersonIcon />
+              </IconButton>
+
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+                PaperProps={{
+                  onMouseEnter: handleProfileMouseEnter,
+                  onMouseLeave: handleProfileMouseLeave,
+                }}
+              >
+                <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
+                  Login
+                </MenuItem>
+                <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
+                  Register
+                </MenuItem>
+              </Menu>
+            </Box>
           </Box>
-
-          {/* Profile Menu */}
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem component={RouterLink} to="/profile" onClick={handleMenuClose}>
-              My Profile
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/orders" onClick={handleMenuClose}>
-              My Orders
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/wishlist" onClick={handleMenuClose}>
-              Wishlist
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
-              Login
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
-              Register
-            </MenuItem>
-          </Menu>
 
           {/* Mobile Menu */}
           <Menu
@@ -372,7 +488,7 @@ function Header() {
           >
             <MenuItem onClick={handleMenuClose}>
               <Typography variant="subtitle1" fontWeight={600}>
-                Categories
+                Danh mục
               </Typography>
             </MenuItem>
             {categories.map((category) => (
@@ -387,13 +503,10 @@ function Header() {
               </MenuItem>
             ))}
             <MenuItem component={RouterLink} to="/products" onClick={handleMenuClose}>
-              All Products
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/deals" onClick={handleMenuClose}>
-              Deals
+              Sản phẩm
             </MenuItem>
             <MenuItem component={RouterLink} to="/contact" onClick={handleMenuClose}>
-              Contact
+              Liên hệ
             </MenuItem>
             <MenuItem component={RouterLink} to="/cart" onClick={handleMenuClose}>
               Cart
