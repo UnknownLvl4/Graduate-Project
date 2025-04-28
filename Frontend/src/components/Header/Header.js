@@ -88,20 +88,20 @@ function Header() {
   const categories = [
     {
       id: 1,
-      name: 'Laptops',
-      subcategories: ['Gaming', 'Business', 'Student'],
+      name: 'Laptop',
+      subcategories: ['Gaming', 'Văn phòng', 'Học sinh - Sinh viên'],
       brands: ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus'],
     },
     {
       id: 2,
-      name: 'Phones',
-      subcategories: ['Smartphones', 'Basic Phones', 'Accessories'],
-      brands: ['Apple', 'Samsung', 'Google', 'OnePlus'],
+      name: 'Điện thoại',
+      subcategories: ['Điện thoại 5G', 'Phổ thông 4G', 'Điện thoại gập'],
+      brands: ['Apple', 'Samsung', 'Xiaomi', 'OnePlus'],
     },
     {
       id: 3,
-      name: 'Headphones',
-      subcategories: ['Wireless', 'Gaming', 'Sports'],
+      name: 'Tai nghe',
+      subcategories: ['Không dây', 'Gaming', 'Thể thao'],
       brands: ['Sony', 'Bose', 'JBL', 'Apple'],
     },
   ];

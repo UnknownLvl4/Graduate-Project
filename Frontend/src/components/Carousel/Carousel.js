@@ -6,23 +6,23 @@ import { Link as RouterLink } from 'react-router-dom';
 const slides = [
   {
     url: 'https://images.unsplash.com/photo-1593640495253-23196b27a87f?auto=format&fit=crop&w=1920&h=600',
-    title: 'Welcome to\nHND Store',
-    description: 'Your Premium Electronics Destination',
-    buttonText: 'Shop Now',
+    title: 'Chào mừng tới HND Store',
+    description: 'Khám phá thế giới công nghệ mới',
+    buttonText: 'Mua ngay',
     buttonLink: '/products',
   },
   {
     url: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=1920&h=600',
-    title: 'Gaming\nParadise',
-    description: 'Level Up Your Gaming Experience',
-    buttonText: 'Explore Gaming',
+    title: 'Thiên đường của các game thủ',
+    description: 'Nâng tầm trải nghiệm chơi game của bạn',
+    buttonText: 'Khám phá thế giới Gaming',
     buttonLink: '/products?category=gaming',
   },
   {
     url: 'https://images.unsplash.com/photo-1468436139062-f60a71c5c892?auto=format&fit=crop&w=1920&h=600',
-    title: 'Professional\nTech',
-    description: 'Power Your Productivity',
-    buttonText: 'View Laptops',
+    title: 'Công nghệ tân tiến',
+    description: 'Tăng năng suất làm việc của bạn',
+    buttonText: 'Xem Laptops',
     buttonLink: '/products?category=laptops',
   },
 ];
