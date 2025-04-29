@@ -1,0 +1,67 @@
+import { IsString, IsNumber, IsOptional, Min, Matches, IsNotEmpty, MaxLength } from 'class-validator';
+
+export class CreateProductDto {
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[A-Z]+$/, { message: 'Category ID must contain only uppercase letters' })
+  category_id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(10, { message: 'Product ID cannot be longer than 10 characters' })
+  product_id: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Product name is required' })
+  product_name: string;
+
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @IsNumber()
+  @Min(0, { message: 'Stock quantity cannot be negative' })
+  stock_quantity: number;
+
+  @IsString()
+  @IsOptional()
+  image: string;
+
+  @IsNumber()
+  @Min(0, { message: 'Price cannot be negative' })
+  price: number;
+}
+
+export class UpdateProductDto implements Partial<CreateProductDto> {
+  @IsString()
+  @IsOptional()
+  @Matches(/^[A-Z]+$/, { message: 'Category ID must contain only uppercase letters' })
+  category_id?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(10, { message: 'Product ID cannot be longer than 10 characters' })
+  product_id?: string;
+
+  @IsString()
+  @IsOptional()
+  product_name?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0, { message: 'Stock quantity cannot be negative' })
+  stock_quantity?: number;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0, { message: 'Price cannot be negative' })
+  price?: number;
+}
