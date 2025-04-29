@@ -772,9 +772,9 @@ function Dashboard() {
               indicatorColor="primary"
               textColor="primary"
             >
-              <Tab label="Products" />
-              <Tab label="Orders" />
-              <Tab label="Users" />
+              <Tab label="Sản phẩm" />
+              <Tab label="Đơn hàng" />
+              <Tab label="Người dùng" />
             </Tabs>
 
             <TabPanel value={tab} index={0}>

@@ -19,16 +19,14 @@ export class CreateProductDto {
   @IsOptional()
   description: string;
 
-  @IsNumber()
-  @Min(0, { message: 'Stock quantity cannot be negative' })
+  @IsString()
   stock_quantity: number;
 
   @IsString()
   @IsOptional()
   image: string;
 
-  @IsNumber()
-  @Min(0, { message: 'Price cannot be negative' })
+  @IsString()
   price: number;
 }
 
@@ -51,17 +49,15 @@ export class UpdateProductDto implements Partial<CreateProductDto> {
   @IsOptional()
   description?: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  @Min(0, { message: 'Stock quantity cannot be negative' })
   stock_quantity?: number;
 
   @IsString()
   @IsOptional()
   image?: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  @Min(0, { message: 'Price cannot be negative' })
   price?: number;
 }

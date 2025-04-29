@@ -31,6 +31,7 @@ export const createProduct = async (productData) => {
 };
 
 export const updateProduct = async (categoryId, productId, productData) => {
+  console.log(productData);
   const formData = new FormData();
   Object.keys(productData).forEach(key => {
     if (key === 'image' && productData[key] instanceof File) {

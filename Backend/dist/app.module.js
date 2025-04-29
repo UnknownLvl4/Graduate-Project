@@ -31,7 +31,7 @@ exports.AppModule = AppModule = __decorate([
                 password: process.env.DB_PASSWORD || '123456',
                 database: process.env.DB_NAME || 'E_commerce',
                 entities: [product_entity_1.Product],
-                synchronize: true,
+                synchronize: false,
             }),
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '..', 'uploads'),

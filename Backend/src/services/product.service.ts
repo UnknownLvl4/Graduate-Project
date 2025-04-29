@@ -96,6 +96,16 @@ export class ProductService {
         createProductDto.image = `/uploads/products/${fileName}`;
       }
 
+      // Handle updateProductDto.stock_quantity is number and convert it to number
+      if (createProductDto.stock_quantity) {
+        createProductDto.stock_quantity = Number(createProductDto.stock_quantity);
+      }
+
+      // Handle updateProductDto.price is number and convert it to number
+      if (createProductDto.price) {
+        createProductDto.price = Number(createProductDto.price);
+      }
+
       const product = this.productRepository.create(createProductDto);
       const result = await this.productRepository.save(product);
       this.logger.debug('Product created successfully:', result);
@@ -129,6 +139,16 @@ export class ProductService {
         
         // Update the image path in DTO
         updateProductDto.image = `/uploads/products/${fileName}`;
+      }
+
+      // Handle updateProductDto.stock_quantity is number and convert it to number
+      if (updateProductDto.stock_quantity) {
+        updateProductDto.stock_quantity = Number(updateProductDto.stock_quantity);
+      }
+
+      // Handle updateProductDto.price is number and convert it to number
+      if (updateProductDto.price) {
+        updateProductDto.price = Number(updateProductDto.price);
       }
 
       // Create a new object with only the fields we want to update

@@ -90,6 +90,12 @@ let ProductService = ProductService_1 = class ProductService {
                 fs.writeFileSync(filePath, imageFile.buffer);
                 createProductDto.image = `/uploads/products/${fileName}`;
             }
+            if (createProductDto.stock_quantity) {
+                createProductDto.stock_quantity = Number(createProductDto.stock_quantity);
+            }
+            if (createProductDto.price) {
+                createProductDto.price = Number(createProductDto.price);
+            }
             const product = this.productRepository.create(createProductDto);
             const result = await this.productRepository.save(product);
             this.logger.debug('Product created successfully:', result);
@@ -115,6 +121,12 @@ let ProductService = ProductService_1 = class ProductService {
                 }
                 fs.writeFileSync(filePath, imageFile.buffer);
                 updateProductDto.image = `/uploads/products/${fileName}`;
+            }
+            if (updateProductDto.stock_quantity) {
+                updateProductDto.stock_quantity = Number(updateProductDto.stock_quantity);
+            }
+            if (updateProductDto.price) {
+                updateProductDto.price = Number(updateProductDto.price);
             }
             const updatedProduct = {
                 ...product,

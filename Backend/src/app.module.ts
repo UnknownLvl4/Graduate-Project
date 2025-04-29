@@ -19,7 +19,7 @@ import { Product } from './entities/product.entity';
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
       entities: [Product],
-      synchronize: true,
+      synchronize: false, // Disable synchronization
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),

@@ -34,7 +34,7 @@ export class ProductController {
     try {
       this.logger.log(`Finding product - Category ID: ${categoryId}, Product ID: ${productId}`);
       const result = await this.productService.findOne(categoryId, productId);
-      this.logger.log(`Found product: ${result.name}`);
+      this.logger.log(`Found product: ${result.product_name}`);
       return result;
     } catch (error) {
       this.logger.error(`Error finding product: ${error.message}`, error.stack);
@@ -49,9 +49,9 @@ export class ProductController {
     @UploadedFile() imageFile: Express.Multer.File
   ) {
     try {
-      this.logger.log(`Creating product: ${createProductDto.name}`);
+      this.logger.log(`Creating product: ${createProductDto.product_name}`);
       const result = await this.productService.create(createProductDto, imageFile);
-      this.logger.log(`Created product: ${result.name}`);
+      this.logger.log(`Created product: ${result.product_name}`);
       return result;
     } catch (error) {
       this.logger.error(`Error creating product: ${error.message}`, error.stack);
@@ -70,7 +70,7 @@ export class ProductController {
     try {
       this.logger.log(`Updating product - Category ID: ${categoryId}, Product ID: ${productId}`);
       const result = await this.productService.update(categoryId, productId, updateProductDto, imageFile);
-      this.logger.log(`Updated product: ${result.name}`);
+      this.logger.log(`Updated product: ${result.product_name}`);
       return result;
     } catch (error) {
       this.logger.error(`Error updating product: ${error.message}`, error.stack);
@@ -86,7 +86,7 @@ export class ProductController {
     try {
       this.logger.log(`Removing product - Category ID: ${categoryId}, Product ID: ${productId}`);
       const result = await this.productService.remove(categoryId, productId);
-      this.logger.log(`Removed product: ${result.name}`);
+      this.logger.log(`Removed product successfully`);
       return result;
     } catch (error) {
       this.logger.error(`Error removing product: ${error.message}`, error.stack);
@@ -99,7 +99,7 @@ export class ProductController {
     try {
       this.logger.log(`Bulk deleting products`);
       const result = await this.productService.bulkDelete(ids);
-      this.logger.log(`Bulk deleted ${result.deletedCount} products`);
+      this.logger.log(`Bulk delete completed successfully`);
       return result;
     } catch (error) {
       this.logger.error(`Error bulk deleting products: ${error.message}`, error.stack);

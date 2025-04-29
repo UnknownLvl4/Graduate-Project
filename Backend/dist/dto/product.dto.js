@@ -44,8 +44,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "description", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0, { message: 'Stock quantity cannot be negative' }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "stock_quantity", void 0);
 __decorate([
@@ -54,8 +53,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "image", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0, { message: 'Price cannot be negative' }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "price", void 0);
 class UpdateProductDto {
@@ -91,9 +89,8 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "description", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.Min)(0, { message: 'Stock quantity cannot be negative' }),
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "stock_quantity", void 0);
 __decorate([
@@ -102,9 +99,8 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "image", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.Min)(0, { message: 'Price cannot be negative' }),
     __metadata("design:type", Number)
 ], UpdateProductDto.prototype, "price", void 0);
 //# sourceMappingURL=product.dto.js.map
