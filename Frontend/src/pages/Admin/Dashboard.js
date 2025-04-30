@@ -64,6 +64,7 @@ function Dashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigate = useNavigate();
 
@@ -292,6 +293,14 @@ function Dashboard() {
     }
   };
 
+  const filteredItems = items.filter((item) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      item.product_id.toLowerCase().includes(query) ||
+      item.product_name.toLowerCase().includes(query)
+    );
+  });
+
   // Render functions for different sections
   const renderProductsSection = () => (
     <Box>
@@ -307,6 +316,17 @@ function Dashboard() {
         </Button>
       </Box>
 
+      <Box sx={{ mb: 2 }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Search products by ID or name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          sx={{ bgcolor: 'background.paper' }}
+        />
+      </Box>
+
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
@@ -317,7 +337,7 @@ function Dashboard() {
         <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
           <CircularProgress />
         </Box>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
         <Alert severity="info">No products found</Alert>
       ) : (
         <TableContainer component={Paper}>
@@ -340,7 +360,7 @@ function Dashboard() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((item) => {
+              {filteredItems.map((item) => {
                 const isItemSelected = isSelected(`${item.category_id}-${item.product_id}`);
                 return (
                   <TableRow 
