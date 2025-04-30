@@ -16,6 +16,7 @@ import Checkout from './pages/Checkout/Checkout';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import AdminDashboard from './pages/Admin/Dashboard';
+import AdminProductDetail from './pages/Admin/ProductDetail';
 
 // Create theme
 const theme = createTheme({
@@ -46,6 +47,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/products/:category_id/:product_id" element={<AdminProductDetail />} />
             </Routes>
           </main>
           <Footer />

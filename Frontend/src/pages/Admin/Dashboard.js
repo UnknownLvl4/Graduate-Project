@@ -360,7 +360,7 @@ function Dashboard() {
                     <TableCell>{item.stock_quantity}</TableCell>
                     <TableCell>
                       <IconButton 
-                        onClick={() => navigate(`/products/${item.category_id}/${item.product_id}`)} 
+                        onClick={() => navigate(`/admin/products/${item.category_id}/${item.product_id}`)} 
                         disabled={loading}
                         title="View Details"
                       >
