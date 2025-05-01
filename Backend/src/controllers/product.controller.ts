@@ -106,4 +106,17 @@ export class ProductController {
       throw new HttpException('Error bulk deleting products', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @Get('most-expensive-by-category')
+  async findMostExpensiveByCategory() {
+    try {
+      this.logger.log(`Finding most expensive products by category`);
+      const result = await this.productService.findMostExpensiveByCategory();
+      this.logger.log(`Found most expensive products by category`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Error finding most expensive products by category: ${error.message}`, error.stack);
+      throw new HttpException('Error finding most expensive products by category', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

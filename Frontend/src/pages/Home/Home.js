@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -8,49 +8,45 @@ import {
   CardContent,
   CardMedia,
   Button,
-} from '@mui/material';
-import Carousel from '../../components/Carousel/Carousel';
+} from "@mui/material";
+import Carousel from "../../components/Carousel/Carousel";
+import { useEffect, useState } from "react";
+import customerService from "../../services/customerService";
 
 function Home() {
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'Latest Smartphone',
-      image: 'https://via.placeholder.com/300x200',
-      price: '$999',
-      category: 'Phones',
-    },
-    {
-      id: 2,
-      name: 'Gaming Laptop',
-      image: 'https://via.placeholder.com/300x200',
-      price: '$1499',
-      category: 'Laptops',
-    },
-    {
-      id: 3,
-      name: 'Wireless Headphones',
-      image: 'https://via.placeholder.com/300x200',
-      price: '$199',
-      category: 'Headphones',
-    },
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const products =
+          await customerService.queryMostExpensiveProductByCategory();
+
+        // Map the API response directly to set featured products
+        setFeaturedProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const categories = [
     {
       id: 1,
-      name: 'Laptops',
-      image: 'https://via.placeholder.com/200x200',
+      name: "Laptops",
+      image: "https://img.freepik.com/premium-vector/laptop-vector-mockup-647546_982290-58.jpg",
     },
     {
       id: 2,
-      name: 'Phones',
-      image: 'https://via.placeholder.com/200x200',
+      name: "Phones",
+      image: "https://img.freepik.com/free-vector/smart-phone-flat-style_78370-4084.jpg",
     },
     {
       id: 3,
-      name: 'Headphones',
-      image: 'https://via.placeholder.com/200x200',
+      name: "Headphones",
+      image: "https://thumbs.dreamstime.com/b/headphone-black-icon-isolated-white-vector-illustration-flat-web-mobile-138372498.jpg",
     },
   ];
 
@@ -69,19 +65,31 @@ function Home() {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={product.image}
-                  alt={product.name}
+                  src={product.image}
+                  alt={product.product_name}
+                  sx={{ objectFit: "contain" }}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h6">
-                    {product.name}
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}>
+                    {product.product_name}
                   </Typography>
                   <Typography
                     variant="subtitle1"
                     color="text.secondary"
                     gutterBottom
-                  >
-                    {product.category}
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}>
+                    {product.category_name}
                   </Typography>
                   <Typography variant="h6" color="primary">
                     {product.price}
@@ -91,8 +99,7 @@ function Home() {
                     component={RouterLink}
                     to={`/products/${product.id}`}
                     sx={{ mt: 2 }}
-                    fullWidth
-                  >
+                    fullWidth>
                     View Details
                   </Button>
                 </CardContent>
@@ -100,7 +107,6 @@ function Home() {
             </Grid>
           ))}
         </Grid>
-
         {/* Categories */}
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
           Shop by Category
@@ -112,24 +118,28 @@ function Home() {
                 component={RouterLink}
                 to={`/products?category=${category.name.toLowerCase()}`}
                 sx={{
-                  textDecoration: 'none',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  '&:hover': {
-                    transform: 'scale(1.02)',
-                    transition: 'transform 0.2s ease-in-out',
+                  textDecoration: "none",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    transition: "transform 0.2s ease-in-out",
                   },
-                }}
-              >
+                }}>
                 <CardMedia
                   component="img"
                   height="200"
                   image={category.image}
                   alt={category.name}
+                  sx={{ objectFit: "contain" }}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" align="center">
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    align="center">
                     {category.name}
                   </Typography>
                 </CardContent>
@@ -142,4 +152,4 @@ function Home() {
   );
 }
 
-export default Home; 
+export default Home;

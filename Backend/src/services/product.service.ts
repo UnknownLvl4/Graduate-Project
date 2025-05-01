@@ -205,4 +205,34 @@ export class ProductService {
       throw error;
     }
   }
+
+  async findMostExpensiveByCategory(): Promise<any> {
+    this.logger.debug('Finding the most expensive product in each category and sub-category');
+    try {
+      const query = `
+        SELECT p.*, c.name as category_name
+        FROM product p
+        INNER JOIN (
+          SELECT 
+            category_id, 
+            MAX(price) as max_price
+          FROM 
+            product
+          GROUP BY 
+            category_id, sub_category_id
+        ) max_prices
+        ON p.category_id = max_prices.category_id 
+        AND p.price = max_prices.max_price
+        INNER JOIN category c ON p.category_id = c.id
+      `;
+
+      const result = await this.productRepository.query(query);
+
+      this.logger.debug('Most expensive products by category and sub-category retrieved successfully:', result);
+      return result;
+    } catch (error) {
+      this.logger.error('Error finding the most expensive products by category and sub-category:', error);
+      throw error;
+    }
+  }
 }
