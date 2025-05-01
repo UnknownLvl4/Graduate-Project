@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -42,15 +42,27 @@ function Header() {
   const [cartAnchorEl, setCartAnchorEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchRef = useRef(null);
-
-  // Add refs for hover functionality
   const profileRef = useRef(null);
   const cartRef = useRef(null);
   const categoryRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Hover handlers for profile menu
-  const handleProfileMouseEnter = (event) => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    setIsLoggedIn(!!token && !!user);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    navigate('/login');
+  };
+
+  const handleProfileMouseEnter = () => {
     setAnchorEl(profileRef.current);
   };
 
@@ -58,7 +70,6 @@ function Header() {
     setAnchorEl(null);
   };
 
-  // Hover handlers for cart menu
   const handleCartMouseEnter = (event) => {
     setCartAnchorEl(cartRef.current);
   };
@@ -67,7 +78,6 @@ function Header() {
     setCartAnchorEl(null);
   };
 
-  // Hover handlers for category menu
   const handleCategoryMouseEnter = (event) => {
     setCategoryMenuAnchor(categoryRef.current);
   };
@@ -76,15 +86,12 @@ function Header() {
     setCategoryMenuAnchor(null);
   };
 
-  // Mock search results (will be from API later)
   const mockProducts = [
     { id: 1, name: 'Gaming Laptop', price: 1299.99, category: 'Laptops' },
     { id: 2, name: 'Wireless Mouse', price: 29.99, category: 'Accessories' },
     { id: 3, name: 'Mechanical Keyboard', price: 129.99, category: 'Accessories' },
-    // Add more mock products
   ];
 
-  // Categories data (will be fetched from backend later)
   const categories = [
     {
       id: 1,
@@ -106,7 +113,6 @@ function Header() {
     },
   ];
 
-  // Mock cart items (will be from Redux later)
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -129,7 +135,6 @@ function Header() {
     setSearchQuery(query);
 
     if (query.trim()) {
-      // Filter mock products (will be API call later)
       const results = mockProducts.filter(
         (product) =>
           product.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -150,21 +155,9 @@ function Header() {
     setSearchQuery('');
     setIsSearchOpen(false);
   };
-// eslint-disable-next-line
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMenuAnchorEl(event.currentTarget);
-  };
-// eslint-disable-next-line
-  const handleCategoryMenuOpen = (event) => {
-    setCategoryMenuAnchor(event.currentTarget);
-  };
-// eslint-disable-next-line
-  const handleCartOpen = (event) => {
-    setCartAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
@@ -187,7 +180,6 @@ function Header() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Mobile Menu Icon */}
           <IconButton
             edge="start"
             color="inherit"
@@ -198,7 +190,6 @@ function Header() {
             <MenuIcon />
           </IconButton>
 
-          {/* Logo */}
           <Typography
             variant="h6"
             component={RouterLink}
@@ -215,9 +206,7 @@ function Header() {
             E-Commerce
           </Typography>
 
-          {/* Desktop Navigation */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {/* Categories Mega Menu */}
             <Box
               ref={categoryRef}
               onMouseEnter={handleCategoryMouseEnter}
@@ -294,7 +283,6 @@ function Header() {
             </Button>
           </Box>
 
-          {/* Search Bar with Results */}
           <Box
             ref={searchRef}
             sx={{
@@ -363,7 +351,6 @@ function Header() {
             </IconButton>
           </Box>
 
-          {/* Cart and Profile Icons */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box
               ref={cartRef}
@@ -464,23 +451,28 @@ function Header() {
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
+                onClose={handleMenuClose}
                 PaperProps={{
                   onMouseEnter: handleProfileMouseEnter,
                   onMouseLeave: handleProfileMouseLeave,
                 }}
               >
-                <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
-                  Login
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
-                  Register
-                </MenuItem>
+                {isLoggedIn ? (
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                ) : (
+                  <>
+                    <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
+                      Login
+                    </MenuItem>
+                    <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
+                      Register
+                    </MenuItem>
+                  </>
+                )}
               </Menu>
             </Box>
           </Box>
 
-          {/* Mobile Menu */}
           <Menu
             anchorEl={mobileMenuAnchorEl}
             open={Boolean(mobileMenuAnchorEl)}
@@ -511,12 +503,18 @@ function Header() {
             <MenuItem component={RouterLink} to="/cart" onClick={handleMenuClose}>
               Cart
             </MenuItem>
-            <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
-              Login
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
-              Register
-            </MenuItem>
+            {isLoggedIn ? (
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            ) : (
+              <>
+                <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
+                  Login
+                </MenuItem>
+                <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
+                  Register
+                </MenuItem>
+              </>
+            )}
           </Menu>
         </Toolbar>
       </Container>
@@ -524,4 +522,4 @@ function Header() {
   );
 }
 
-export default Header; 
+export default Header;
