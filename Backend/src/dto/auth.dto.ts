@@ -27,13 +27,9 @@ export class SignUpDto {
 }
 
 export class SignInDto {
-  @IsOptional()
-  @IsEmail()
-  email?: string;
-
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  phone?: string;
+  identifier: string;
 
   @IsNotEmpty()
   @MinLength(6)

@@ -31,6 +31,8 @@ const theme = createTheme({
 });
 
 function App() {
+  const user = JSON.parse(localStorage.getItem('user'));
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -46,8 +48,14 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/products/:category_id/:product_id" element={<AdminProductDetail />} />
+              {user?.isAdmin ? (
+                <>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/products/:category_id/:product_id" element={<AdminProductDetail />} />
+                </>
+              ) : (
+                <Route path="/admin/*" element={<Home />} />
+              )}
             </Routes>
           </main>
           <Footer />

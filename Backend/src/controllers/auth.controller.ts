@@ -40,9 +40,10 @@ export class AuthController {
   @Post('signin')
   async signIn(@Body() signInDto: SignInDto) {
     try {
-      this.logger.log(`Signing in user: ${signInDto.email}`);
+      this.logger.log(`Signing in user: ${signInDto.identifier}`);
       const result = await this.authService.signIn(signInDto);
       this.logger.log(`User signed in successfully: ${result.user.email}`);
+      console.log(result);
       return result;
     } catch (error) {
       this.logger.error(`Error signing in user: ${error.message}`, error.stack);

@@ -22,4 +22,7 @@ export class User {
 
   @Column()
   address: string;
+
+  @Column({name: 'isadmin'})
+  isAdmin: boolean;
 }

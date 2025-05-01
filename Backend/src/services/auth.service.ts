@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { isAbsolute } from 'path';
 
 @Injectable()
 export class AuthService {
@@ -43,11 +44,11 @@ export class AuthService {
   }
 
   async signIn(signInDto: SignInDto) {
-    const { email, phone, password } = signInDto;
+    const { identifier, password } = signInDto;
 
     // Find the user by email or phone
     const user = await this.userRepository.findOne({
-      where: [{ email }, { phone }],
+      where: [{ email: identifier }, { phone: identifier }],
     });
 
     if (!user) {
@@ -70,6 +71,7 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName,
       address: user.address,
+      isAdmin: user.isAdmin,
     };
     const token = this.jwtService.sign(payload);
 
