@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography, Grid, Paper, Box, Button } from '@mui/material';
-import { getProduct } from '../../services/adminService';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Container, Typography, Grid, Paper, Box, Button } from "@mui/material";
+import * as CusomterService from "../../services/customerService";
+import ProductComments from "../../components/ProductComments/ProductComments";
 
 function ProductDetail() {
-  const { categoryId, productId } = useParams();
+  const { id: productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,19 +13,19 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await getProduct(categoryId, productId);
-        setProduct(response.data);
+        const response = await CusomterService.default.getProductById(
+          productId
+        );
+        setProduct(response);
       } catch (err) {
-        setError(err.message || 'Failed to fetch product details');
+        setError(err.message || "Failed to fetch product details");
       } finally {
         setLoading(false);
       }
     };
 
-    if (categoryId && productId) {
-      fetchProduct();
-    }
-  }, [categoryId, productId]);
+    if (productId) fetchProduct();
+  }, [productId]);
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -36,9 +37,13 @@ function ProductDetail() {
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <img
-              src={product.image || 'https://via.placeholder.com/400'}
+              src={product.image || "https://via.placeholder.com/400"}
               alt={product.product_name}
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }}
+              style={{
+                width: "100%",
+                maxHeight: "400px",
+                objectFit: "contain",
+              }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -67,12 +72,17 @@ function ProductDetail() {
               color="primary"
               size="large"
               sx={{ mt: 3 }}
-              disabled={product.stock_quantity === 0}
-            >
-              {product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+              disabled={product.stock_quantity === 0}>
+              {product.stock_quantity === 0 ? "Out of Stock" : "Add to Cart"}
             </Button>
           </Grid>
         </Grid>
+      </Paper>
+      <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Comments
+        </Typography>
+        <ProductComments productId={product.product_id} />
       </Paper>
     </Container>
   );

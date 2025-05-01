@@ -235,4 +235,24 @@ export class ProductService {
       throw error;
     }
   }
+
+  async getProductById(product_id: string) {
+    this.logger.debug(`Getting product by product_id: ${product_id}`);
+    try {
+      const product = await this.productRepository.findOne({
+        where: { product_id },
+      });
+
+      if (!product) {
+        this.logger.warn(`Product not found with id ${product_id}`);
+        throw new NotFoundException(`Product with id ${product_id} not found`);
+      }
+
+      this.logger.debug('Product retrieved successfully:', product);
+      return product;
+    } catch (error) {
+      this.logger.error('Error retrieving product by id:', error);
+      throw error;
+    }
+  }
 }

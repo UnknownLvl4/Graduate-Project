@@ -119,4 +119,17 @@ export class ProductController {
       throw new HttpException('Error finding most expensive products by category', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @Get(':productId')
+  async getProductById(@Param('productId') productId: string) {
+    try {
+      this.logger.log(`Getting product by ID: ${productId}`);
+      const result = await this.productService.getProductById(productId);
+      this.logger.log(`Found product: ${result.product_name}`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Error getting product by ID: ${error.message}`, error.stack);
+      throw new HttpException('Error getting product by ID', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

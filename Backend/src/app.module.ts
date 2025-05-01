@@ -10,6 +10,8 @@ import { Product } from './entities/product.entity';
 import { User } from './entities/user.entity';
 import { AuthModule } from './modules/auth.module';
 import { UsersModule } from './modules/users.module';
+import { ReviewModule } from './modules/review.module';
+import { Review } from './entities/review.entity';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { UsersModule } from './modules/users.module';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
-      entities: [Product, User],
+      entities: [Product, User, Review], // Add Review entity here
       synchronize: false, // Disable synchronization
     }),
     ServeStaticModule.forRoot({
@@ -31,6 +33,7 @@ import { UsersModule } from './modules/users.module';
     ProductModule,
     AuthModule,
     UsersModule,
+    ReviewModule, // Add ReviewModule here
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,17 +34,17 @@ function Home() {
 
   const categories = [
     {
-      id: 1,
+      id: 'LAP',
       name: "Laptops",
       image: "https://img.freepik.com/premium-vector/laptop-vector-mockup-647546_982290-58.jpg",
     },
     {
-      id: 2,
+      id: 'PHN',
       name: "Phones",
       image: "https://img.freepik.com/free-vector/smart-phone-flat-style_78370-4084.jpg",
     },
     {
-      id: 3,
+      id: 'HPH',
       name: "Headphones",
       image: "https://thumbs.dreamstime.com/b/headphone-black-icon-isolated-white-vector-illustration-flat-web-mobile-138372498.jpg",
     },
@@ -97,7 +97,7 @@ function Home() {
                   <Button
                     variant="contained"
                     component={RouterLink}
-                    to={`/products/${product.id}`}
+                    to={`/products/${product.product_id}`}
                     sx={{ mt: 2 }}
                     fullWidth>
                     View Details
@@ -116,7 +116,7 @@ function Home() {
             <Grid item key={category.id} xs={12} sm={6} md={4}>
               <Card
                 component={RouterLink}
-                to={`/products?category=${category.name.toLowerCase()}`}
+                to={`/products?category=${category.id}`}
                 sx={{
                   textDecoration: "none",
                   height: "100%",
