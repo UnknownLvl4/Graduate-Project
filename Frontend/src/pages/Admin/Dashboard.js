@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Grid,
@@ -25,15 +25,15 @@ import {
   CircularProgress,
   TablePagination,
   Checkbox,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import * as adminService from '../../services/adminService';
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import * as adminService from "../../services/adminService";
 
 // TabPanel component for different sections
 function TabPanel({ children, value, index, ...other }) {
@@ -43,8 +43,7 @@ function TabPanel({ children, value, index, ...other }) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
@@ -55,7 +54,7 @@ function Dashboard() {
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState('product');
+  const [dialogType, setDialogType] = useState("product");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -64,7 +63,7 @@ function Dashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -75,7 +74,10 @@ function Dashboard() {
       let data;
       switch (tab) {
         case 0:
-          const response = await adminService.getProducts(page + 1, rowsPerPage);
+          const response = await adminService.getProducts(
+            page + 1,
+            rowsPerPage
+          );
           data = response.data.items;
           setTotalItems(response.data.meta.total);
           break;
@@ -92,8 +94,8 @@ function Dashboard() {
       }
       setItems(data);
     } catch (err) {
-      setError(err.message || 'Failed to fetch data');
-      console.error('Error fetching data:', err);
+      setError(err.message || "Failed to fetch data");
+      console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
     }
@@ -105,20 +107,26 @@ function Dashboard() {
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
-    setDialogType(newValue === 0 ? 'product' : newValue === 1 ? 'order' : 'user');
+    setDialogType(
+      newValue === 0 ? "product" : newValue === 1 ? "order" : "user"
+    );
     setPage(0);
   };
 
   const handleOpenDialog = (item = null) => {
-    setSelectedItem(item ? { ...item } : {
-      category_id: '',
-      product_id: '',
-      product_name: '',
-      description: '',
-      price: '',
-      stock_quantity: '',
-      image: ''
-    });
+    setSelectedItem(
+      item
+        ? { ...item }
+        : {
+            category_id: "",
+            product_id: "",
+            product_name: "",
+            description: "",
+            price: "",
+            stock_quantity: "",
+            image: "",
+          }
+    );
     setOpenDialog(true);
   };
 
@@ -137,15 +145,19 @@ function Dashboard() {
     setPage(0);
   };
 
-  const handleSave = async () => {
+  const handleSaveProduct = async () => {
     setLoading(true);
     setError(null);
 
     // Validate required fields
-    if (!selectedItem.category_id || !selectedItem.product_id || 
-        !selectedItem.product_name || !selectedItem.price || 
-        !selectedItem.stock_quantity) {
-      setError('Please fill in all required fields');
+    if (
+      !selectedItem.category_id ||
+      !selectedItem.product_id ||
+      !selectedItem.product_name ||
+      !selectedItem.price ||
+      !selectedItem.stock_quantity
+    ) {
+      setError("Please fill in all required fields");
       setLoading(false);
       return;
     }
@@ -155,38 +167,42 @@ function Dashboard() {
         category_id: selectedItem.category_id,
         product_id: selectedItem.product_id,
         product_name: selectedItem.product_name,
-        description: selectedItem.description || '',
+        description: selectedItem.description || "",
         stock_quantity: parseInt(selectedItem.stock_quantity),
         price: parseFloat(selectedItem.price),
-        image: selectedItem.image || ''
+        image: selectedItem.image || "",
       };
 
       // Validation
       if (!selectedItem.category_id.match(/^[A-Z]+$/)) {
-        throw new Error('Category ID must contain only uppercase letters');
+        throw new Error("Category ID must contain only uppercase letters");
       }
 
       // Validate product_id length
       if (selectedItem.product_id.length > 10) {
-        throw new Error('Product ID must not exceed 10 characters');
+        throw new Error("Product ID must not exceed 10 characters");
       }
 
       if (selectedItem.price < 0) {
-        throw new Error('Price cannot be negative');
+        throw new Error("Price cannot be negative");
       }
 
       if (selectedItem.stock_quantity < 0) {
-        throw new Error('Stock quantity cannot be negative');
+        throw new Error("Stock quantity cannot be negative");
       }
 
-      if (!selectedItem.product_name || selectedItem.product_name.trim() === '') {
-        throw new Error('Product name is required');
+      if (
+        !selectedItem.product_name ||
+        selectedItem.product_name.trim() === ""
+      ) {
+        throw new Error("Product name is required");
       }
 
       // If product exists in items array, it's an update
       const isUpdate = items.some(
-        item => item.category_id === selectedItem.category_id && 
-                item.product_id === selectedItem.product_id
+        (item) =>
+          item.category_id === selectedItem.category_id &&
+          item.product_id === selectedItem.product_id
       );
 
       if (isUpdate) {
@@ -202,8 +218,8 @@ function Dashboard() {
       await fetchData();
       handleCloseDialog();
     } catch (err) {
-      setError(err.message || 'Failed to save');
-      console.error('Error saving product:', err);
+      setError(err.message || "Failed to save");
+      console.error("Error saving product:", err);
     } finally {
       setLoading(false);
     }
@@ -221,18 +237,21 @@ function Dashboard() {
     setError(null);
     try {
       switch (dialogType) {
-        case 'product':
-          await adminService.deleteProduct(itemToDelete.category_id, itemToDelete.product_id);
+        case "product":
+          await adminService.deleteProduct(
+            itemToDelete.category_id,
+            itemToDelete.product_id
+          );
           break;
-        case 'user':
+        case "user":
           await adminService.deleteUser(itemToDelete.id);
           break;
         default:
-          throw new Error('Invalid operation');
+          throw new Error("Invalid operation");
       }
       await fetchData();
     } catch (err) {
-      setError(err.message || 'Failed to delete');
+      setError(err.message || "Failed to delete");
     } finally {
       setLoading(false);
       setDeleteConfirmOpen(false);
@@ -248,17 +267,11 @@ function Dashboard() {
     }));
   };
 
-  const handleViewProduct = (item) => {
-    navigate(`/products/${item.category_id}/${item.product_id}`);
-  };
-
-  const handleViewDetail = (item) => {
-    window.open(`/products/${item.category_id}/${item.product_id}`, '_blank');
-  };
-
   const handleSelectAll = (event) => {
     if (event.target.checked) {
-      const newSelected = items.map(item => `${item.category_id}-${item.product_id}`);
+      const newSelected = items.map(
+        (item) => `${item.category_id}-${item.product_id}`
+      );
       setSelectedProducts(newSelected);
     } else {
       setSelectedProducts([]);
@@ -272,7 +285,7 @@ function Dashboard() {
     if (selectedIndex === -1) {
       newSelected = [...selectedProducts, id];
     } else {
-      newSelected = selectedProducts.filter(itemId => itemId !== id);
+      newSelected = selectedProducts.filter((itemId) => itemId !== id);
     }
 
     setSelectedProducts(newSelected);
@@ -284,34 +297,41 @@ function Dashboard() {
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append("image", file);
 
-      setSelectedItem(prev => ({
+      setSelectedItem((prev) => ({
         ...prev,
-        image: URL.createObjectURL(file)
+        image: URL.createObjectURL(file),
       }));
     }
   };
 
   const filteredItems = items.filter((item) => {
     const query = searchQuery.toLowerCase();
-    return (
-      item.product_id.toLowerCase().includes(query) ||
-      item.product_name.toLowerCase().includes(query)
-    );
+    if (item.product_id)
+      return (
+        item.product_id.toLowerCase().includes(query) ||
+        item.product_name.toLowerCase().includes(query)
+      );
+    else return item;
   });
 
   // Render functions for different sections
   const renderProductsSection = () => (
     <Box>
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box
+        sx={{
+          mb: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}>
         <Typography variant="h6">Products</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
-          disabled={loading}
-        >
+          disabled={loading}>
           Add Product
         </Button>
       </Box>
@@ -323,7 +343,7 @@ function Dashboard() {
           label="Search products by ID or name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ bgcolor: 'background.paper' }}
+          sx={{ bgcolor: "background.paper" }}
         />
       </Box>
 
@@ -334,7 +354,7 @@ function Dashboard() {
       )}
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
           <CircularProgress />
         </Box>
       ) : filteredItems.length === 0 ? (
@@ -346,9 +366,15 @@ function Dashboard() {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={items.length > 0 && selectedProducts.length === items.length}
+                    checked={
+                      items.length > 0 &&
+                      selectedProducts.length === items.length
+                    }
                     onChange={handleSelectAll}
-                    indeterminate={selectedProducts.length > 0 && selectedProducts.length < items.length}
+                    indeterminate={
+                      selectedProducts.length > 0 &&
+                      selectedProducts.length < items.length
+                    }
                   />
                 </TableCell>
                 <TableCell>Category ID</TableCell>
@@ -361,16 +387,22 @@ function Dashboard() {
             </TableHead>
             <TableBody>
               {filteredItems.map((item) => {
-                const isItemSelected = isSelected(`${item.category_id}-${item.product_id}`);
+                const isItemSelected = isSelected(
+                  `${item.category_id}-${item.product_id}`
+                );
                 return (
-                  <TableRow 
+                  <TableRow
                     key={`${item.category_id}-${item.product_id}`}
-                    selected={isItemSelected}
-                  >
+                    selected={isItemSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isItemSelected}
-                        onChange={(event) => handleSelectProduct(event, `${item.category_id}-${item.product_id}`)}
+                        onChange={(event) =>
+                          handleSelectProduct(
+                            event,
+                            `${item.category_id}-${item.product_id}`
+                          )
+                        }
                       />
                     </TableCell>
                     <TableCell>{item.category_id}</TableCell>
@@ -379,25 +411,26 @@ function Dashboard() {
                     <TableCell>${item.price}</TableCell>
                     <TableCell>{item.stock_quantity}</TableCell>
                     <TableCell>
-                      <IconButton 
-                        onClick={() => navigate(`/admin/products/${item.category_id}/${item.product_id}`)} 
+                      <IconButton
+                        onClick={() =>
+                          navigate(
+                            `/admin/products/${item.category_id}/${item.product_id}`
+                          )
+                        }
                         disabled={loading}
-                        title="View Details"
-                      >
+                        title="View Details">
                         <VisibilityIcon />
                       </IconButton>
-                      <IconButton 
-                        onClick={() => handleOpenDialog(item)} 
+                      <IconButton
+                        onClick={() => handleOpenDialog(item)}
                         disabled={loading}
-                        title="Edit"
-                      >
+                        title="Edit">
                         <EditIcon />
                       </IconButton>
-                      <IconButton 
-                        onClick={() => handleDeleteClick(item)} 
+                      <IconButton
+                        onClick={() => handleDeleteClick(item)}
                         disabled={loading}
-                        title="Delete"
-                      >
+                        title="Delete">
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -418,44 +451,62 @@ function Dashboard() {
         </TableContainer>
       )}
 
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedItem ? 'Edit Product' : 'Add Product'}</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth>
+        <DialogTitle>
+          {selectedItem ? "Edit Product" : "Add Product"}
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               name="category_id"
               label="Category ID"
-              value={selectedItem?.category_id || ''}
+              value={selectedItem?.category_id || ""}
               onChange={handleInputChange}
               fullWidth
               required
               error={error && !selectedItem?.category_id}
-              helperText={error && !selectedItem?.category_id ? 'Category ID is required' : ''}
+              helperText={
+                error && !selectedItem?.category_id
+                  ? "Category ID is required"
+                  : ""
+              }
             />
             <TextField
               name="product_id"
               label="Product ID"
-              value={selectedItem?.product_id || ''}
+              value={selectedItem?.product_id || ""}
               onChange={handleInputChange}
               fullWidth
               required
               error={error && !selectedItem?.product_id}
-              helperText={error && !selectedItem?.product_id ? 'Product ID is required' : ''}
+              helperText={
+                error && !selectedItem?.product_id
+                  ? "Product ID is required"
+                  : ""
+              }
             />
             <TextField
               name="product_name"
               label="Product Name"
-              value={selectedItem?.product_name || ''}
+              value={selectedItem?.product_name || ""}
               onChange={handleInputChange}
               fullWidth
               required
               error={error && !selectedItem?.product_name}
-              helperText={error && !selectedItem?.product_name ? 'Product name is required' : ''}
+              helperText={
+                error && !selectedItem?.product_name
+                  ? "Product name is required"
+                  : ""
+              }
             />
             <TextField
               name="description"
               label="Description"
-              value={selectedItem?.description || ''}
+              value={selectedItem?.description || ""}
               onChange={handleInputChange}
               fullWidth
               multiline
@@ -465,7 +516,7 @@ function Dashboard() {
               name="price"
               label="Price"
               type="number"
-              value={selectedItem?.price || ''}
+              value={selectedItem?.price || ""}
               onChange={handleInputChange}
               fullWidth
               required
@@ -473,23 +524,29 @@ function Dashboard() {
                 startAdornment: <span>$</span>,
               }}
               error={error && !selectedItem?.price}
-              helperText={error && !selectedItem?.price ? 'Price is required' : ''}
+              helperText={
+                error && !selectedItem?.price ? "Price is required" : ""
+              }
             />
             <TextField
               name="stock_quantity"
               label="Stock"
               type="number"
-              value={selectedItem?.stock_quantity || ''}
+              value={selectedItem?.stock_quantity || ""}
               onChange={handleInputChange}
               fullWidth
               required
               error={error && !selectedItem?.stock_quantity}
-              helperText={error && !selectedItem?.stock_quantity ? 'Stock is required' : ''}
+              helperText={
+                error && !selectedItem?.stock_quantity
+                  ? "Stock is required"
+                  : ""
+              }
             />
             <Box>
               <input
                 accept="image/*"
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 id="image-file"
                 type="file"
                 onChange={handleImageChange}
@@ -501,10 +558,10 @@ function Dashboard() {
               </label>
               {selectedItem?.image && (
                 <Box sx={{ mt: 2 }}>
-                  <img 
-                    src={selectedItem.image} 
-                    alt="Preview" 
-                    style={{ maxWidth: '100%', maxHeight: '200px' }} 
+                  <img
+                    src={selectedItem.image}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", maxHeight: "200px" }}
                   />
                 </Box>
               )}
@@ -513,13 +570,18 @@ function Dashboard() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" disabled={loading}>
-            {loading ? 'Saving...' : 'Save'}
+          <Button
+            onClick={handleSaveProduct}
+            variant="contained"
+            disabled={loading}>
+            {loading ? "Saving..." : "Save"}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           Are you sure you want to delete this product?
@@ -567,76 +629,134 @@ function Dashboard() {
     </TableContainer>
   );
 
-  const renderUsersSection = () => (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Role</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{item.email}</TableCell>
-              <TableCell>{item.role}</TableCell>
-              <TableCell>
-                <IconButton onClick={() => handleOpenDialog(item)}>
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
+  const renderUsersSection = () => {
+    return (
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+          </TableHead>
+          <TableBody>
+            {items.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>
+                  {user.firstName} {user.lastName}
+                </TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.isAdmin ? "ADMIN" : "CUSTOMER"}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleOpenDialog(user)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
+  const handleSaveUser = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const userData = {
+        firstName: selectedItem.firstName,
+        lastName: selectedItem.lastName,
+        email: selectedItem.email,
+        isAdmin: selectedItem.isAdmin,
+      };
+      // Validation
+      if (!selectedItem.firstName || !selectedItem.lastName) {
+        throw new Error("First and last name are required");
+      }
+      if (!selectedItem.email) {
+        throw new Error("Email is required");
+      }
+      if (!selectedItem.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        throw new Error("Invalid email format");
+      }
+      if (selectedItem.isAdmin === undefined) {
+        throw new Error("Role is required");
+      }
+      // save user
+      if (selectedItem.id)
+        await adminService.updateUser(selectedItem.id, userData);
+    } catch (err) {
+      setError(err.message || "Failed to save user");
+      console.error("Error saving user:", err);
+    } finally {
+      setLoading(false);
+      handleCloseDialog();
+      fetchData();
+    }
+  };
 
   const renderDialog = () => (
-    <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-      <DialogTitle>{selectedItem ? `Edit ${dialogType}` : `Add ${dialogType}`}</DialogTitle>
+    <Dialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      maxWidth="sm"
+      fullWidth>
+      <DialogTitle>
+        {selectedItem ? `Edit ${dialogType}` : `Add ${dialogType}`}
+      </DialogTitle>
       <DialogContent>
-        <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {dialogType === 'product' && (
+        <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+          {dialogType === "product" && (
             <>
               <TextField
                 name="category_id"
                 label="Category ID"
-                value={selectedItem?.category_id || ''}
+                value={selectedItem?.category_id || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
                 error={error && !selectedItem?.category_id}
-                helperText={error && !selectedItem?.category_id ? 'Category ID is required' : ''}
+                helperText={
+                  error && !selectedItem?.category_id
+                    ? "Category ID is required"
+                    : ""
+                }
               />
               <TextField
                 name="product_id"
                 label="Product ID"
-                value={selectedItem?.product_id || ''}
+                value={selectedItem?.product_id || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
                 error={error && !selectedItem?.product_id}
-                helperText={error && !selectedItem?.product_id ? 'Product ID is required' : ''}
+                helperText={
+                  error && !selectedItem?.product_id
+                    ? "Product ID is required"
+                    : ""
+                }
               />
               <TextField
                 name="product_name"
                 label="Product Name"
-                value={selectedItem?.product_name || ''}
+                value={selectedItem?.product_name || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
                 error={error && !selectedItem?.product_name}
-                helperText={error && !selectedItem?.product_name ? 'Product Name is required' : ''}
+                helperText={
+                  error && !selectedItem?.product_name
+                    ? "Product Name is required"
+                    : ""
+                }
               />
               <TextField
                 name="description"
                 label="Description"
-                value={selectedItem?.description || ''}
+                value={selectedItem?.description || ""}
                 onChange={handleInputChange}
                 fullWidth
                 multiline
@@ -646,7 +766,7 @@ function Dashboard() {
                 name="price"
                 label="Price"
                 type="number"
-                value={selectedItem?.price || ''}
+                value={selectedItem?.price || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -654,23 +774,29 @@ function Dashboard() {
                   startAdornment: <span>$</span>,
                 }}
                 error={error && !selectedItem?.price}
-                helperText={error && !selectedItem?.price ? 'Price is required' : ''}
+                helperText={
+                  error && !selectedItem?.price ? "Price is required" : ""
+                }
               />
               <TextField
                 name="stock_quantity"
                 label="Stock"
                 type="number"
-                value={selectedItem?.stock_quantity || ''}
+                value={selectedItem?.stock_quantity || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
                 error={error && !selectedItem?.stock_quantity}
-                helperText={error && !selectedItem?.stock_quantity ? 'Stock is required' : ''}
+                helperText={
+                  error && !selectedItem?.stock_quantity
+                    ? "Stock is required"
+                    : ""
+                }
               />
               <Box>
                 <input
                   accept="image/*"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="image-file"
                   type="file"
                   onChange={handleImageChange}
@@ -682,26 +808,25 @@ function Dashboard() {
                 </label>
                 {selectedItem?.image && (
                   <Box sx={{ mt: 2 }}>
-                    <img 
-                      src={selectedItem.image} 
-                      alt="Preview" 
-                      style={{ maxWidth: '100%', maxHeight: '200px' }} 
+                    <img
+                      src={selectedItem.image}
+                      alt="Preview"
+                      style={{ maxWidth: "100%", maxHeight: "200px" }}
                     />
                   </Box>
                 )}
               </Box>
             </>
           )}
-          {dialogType === 'order' && (
+          {dialogType === "order" && (
             <TextField
               name="status"
               label="Status"
               select
-              value={selectedItem?.status || ''}
+              value={selectedItem?.status || ""}
               onChange={handleInputChange}
               fullWidth
-              required
-            >
+              required>
               <MenuItem value="Pending">Pending</MenuItem>
               <MenuItem value="Processing">Processing</MenuItem>
               <MenuItem value="Shipped">Shipped</MenuItem>
@@ -709,12 +834,20 @@ function Dashboard() {
               <MenuItem value="Cancelled">Cancelled</MenuItem>
             </TextField>
           )}
-          {dialogType === 'user' && (
+          {dialogType === "user" && (
             <>
               <TextField
-                name="name"
-                label="Name"
-                value={selectedItem?.name || ''}
+                name="firstName"
+                label="First Name"
+                value={selectedItem?.firstName || ""}
+                onChange={handleInputChange}
+                fullWidth
+                required
+              />
+              <TextField
+                name="lastName"
+                label="Last Name"
+                value={selectedItem?.lastName || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -723,22 +856,21 @@ function Dashboard() {
                 name="email"
                 label="Email"
                 type="email"
-                value={selectedItem?.email || ''}
+                value={selectedItem?.email || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
               />
               <TextField
-                name="role"
+                name="isAdmin"
                 label="Role"
                 select
-                value={selectedItem?.role || ''}
+                value={selectedItem?.isAdmin || false}
                 onChange={handleInputChange}
                 fullWidth
-                required
-              >
-                <MenuItem value="Admin">Admin</MenuItem>
-                <MenuItem value="Customer">Customer</MenuItem>
+                required>
+                <MenuItem value={true}>Admin</MenuItem>
+                <MenuItem value={false}>Customer</MenuItem>
               </TextField>
             </>
           )}
@@ -748,8 +880,13 @@ function Dashboard() {
         <Button onClick={handleCloseDialog} disabled={loading}>
           Cancel
         </Button>
-        <Button onClick={handleSave} variant="contained" disabled={loading}>
-          {loading ? 'Saving...' : 'Save'}
+        <Button
+          onClick={
+            dialogType === "product" ? handleSaveProduct : handleSaveUser
+          }
+          variant="contained"
+          disabled={loading}>
+          {loading ? "Saving..." : "Save"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -757,15 +894,23 @@ function Dashboard() {
 
   // Delete confirmation dialog
   const renderDeleteDialog = () => (
-    <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+    <Dialog
+      open={deleteConfirmOpen}
+      onClose={() => setDeleteConfirmOpen(false)}>
       <DialogTitle>Confirm Delete</DialogTitle>
-      <DialogContent>Are you sure you want to delete this {dialogType}?</DialogContent>
+      <DialogContent>
+        Are you sure you want to delete this {dialogType}?
+      </DialogContent>
       <DialogActions>
         <Button onClick={() => setDeleteConfirmOpen(false)} disabled={loading}>
           Cancel
         </Button>
-        <Button onClick={handleDelete} color="error" variant="contained" disabled={loading}>
-          {loading ? 'Deleting...' : 'Delete'}
+        <Button
+          onClick={handleDelete}
+          color="error"
+          variant="contained"
+          disabled={loading}>
+          {loading ? "Deleting..." : "Delete"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -776,8 +921,12 @@ function Dashboard() {
       <Grid container spacing={3}>
         {/* Header */}
         <Grid item xs={12}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <Typography component="h1" variant="h4" color="primary" gutterBottom>
+          <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+            <Typography
+              component="h1"
+              variant="h4"
+              color="primary"
+              gutterBottom>
               Admin Dashboard
             </Typography>
           </Paper>
@@ -785,13 +934,12 @@ function Dashboard() {
 
         {/* Main Content */}
         <Grid item xs={12}>
-          <Paper sx={{ width: '100%' }}>
+          <Paper sx={{ width: "100%" }}>
             <Tabs
               value={tab}
               onChange={handleTabChange}
               indicatorColor="primary"
-              textColor="primary"
-            >
+              textColor="primary">
               <Tab label="Sản phẩm" />
               <Tab label="Đơn hàng" />
               <Tab label="Người dùng" />
