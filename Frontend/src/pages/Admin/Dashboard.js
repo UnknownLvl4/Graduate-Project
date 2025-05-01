@@ -173,6 +173,8 @@ function Dashboard() {
         image: selectedItem.image || "",
       };
 
+      console.log(selectedItem.image);
+
       // Validation
       if (!selectedItem.category_id.match(/^[A-Z]+$/)) {
         throw new Error("Category ID must contain only uppercase letters");
@@ -296,13 +298,18 @@ function Dashboard() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const buffer = reader.result;
+        const updatedFile = new File([buffer], file.name, { type: file.type });
+        console.log(updatedFile);
 
-      setSelectedItem((prev) => ({
-        ...prev,
-        image: URL.createObjectURL(file),
-      }));
+        setSelectedItem((prev) => ({
+          ...prev,
+          image: updatedFile, // Inject into file object
+        }));
+      };
+      reader.readAsArrayBuffer(file); // Read file as ArrayBuffer
     }
   };
 
@@ -559,7 +566,7 @@ function Dashboard() {
               {selectedItem?.image && (
                 <Box sx={{ mt: 2 }}>
                   <img
-                    src={selectedItem.image}
+                    src={URL.createObjectURL(selectedItem.image)}
                     alt="Preview"
                     style={{ maxWidth: "100%", maxHeight: "200px" }}
                   />
@@ -809,7 +816,7 @@ function Dashboard() {
                 {selectedItem?.image && (
                   <Box sx={{ mt: 2 }}>
                     <img
-                      src={selectedItem.image}
+                      src={URL.createObjectURL(selectedItem.image) || ""}
                       alt="Preview"
                       style={{ maxWidth: "100%", maxHeight: "200px" }}
                     />

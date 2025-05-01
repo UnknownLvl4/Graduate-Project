@@ -93,7 +93,8 @@ export class ProductService {
         fs.writeFileSync(filePath, imageFile.buffer);
         
         // Update the image path in DTO
-        createProductDto.image = `/uploads/products/${fileName}`;
+        const host = process.env.BACKEND_HOST || 'http://localhost:3001';
+        createProductDto.image = `${host}/uploads/products/${fileName}`;
       }
 
       // Handle updateProductDto.stock_quantity is number and convert it to number
@@ -138,7 +139,8 @@ export class ProductService {
         fs.writeFileSync(filePath, imageFile.buffer);
         
         // Update the image path in DTO
-        updateProductDto.image = `/uploads/products/${fileName}`;
+        const host = process.env.BACKEND_HOST || 'http://localhost:3001';
+        updateProductDto.image = `${host}/uploads/products/${fileName}`;
       }
 
       // Handle updateProductDto.stock_quantity is number and convert it to number
