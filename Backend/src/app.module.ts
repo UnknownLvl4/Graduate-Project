@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './modules/product.module';
 import { Product } from './entities/product.entity';
+import { User } from './entities/user.entity';
+import { AuthModule } from './modules/auth.module';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { Product } from './entities/product.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
-      entities: [Product],
+      entities: [Product, User],
       synchronize: false, // Disable synchronization
     }),
     ServeStaticModule.forRoot({
@@ -26,6 +28,7 @@ import { Product } from './entities/product.entity';
       serveRoot: '/uploads',
     }),
     ProductModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
