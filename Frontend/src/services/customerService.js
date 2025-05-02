@@ -53,12 +53,34 @@ const addProductComment = async (commentData) => {
   }
 };
 
+const getAllProducts = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/products`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all products:", error);
+    throw error;
+  }
+};
+
+const queryCategories = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/categories`);
+    return response.data;
+  } catch (error) {
+    console.error("Error querying categories:", error);
+    throw error;
+  }
+};
+
 const customerService = {
   queryProducts,
   queryMostExpensiveProductByCategory,
   getProductById,
   getProductComments,
   addProductComment,
+  getAllProducts,
+  queryCategories,
 };
 
 export default customerService;

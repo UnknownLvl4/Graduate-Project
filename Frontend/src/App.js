@@ -17,6 +17,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminProductDetail from './pages/Admin/ProductDetail';
+import AllProductsByCategory from './pages/Products/AllProductsByCategory';
 
 // Create theme
 const theme = createTheme({
@@ -42,7 +43,7 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
+              <Route path="/products" element={<AllProductsByCategory />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />

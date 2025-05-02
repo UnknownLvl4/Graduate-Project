@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'product', schema: 'public' })
 export class Product {
-  @PrimaryColumn({ name: 'category_id' })
+  @Column({ name: 'category_id' })
   category_id: string;
 
   @PrimaryColumn({ name: 'product_id' })
