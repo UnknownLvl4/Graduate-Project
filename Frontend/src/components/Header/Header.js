@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -23,7 +23,7 @@ import {
   CardMedia,
   CardContent,
   alpha,
-} from '@mui/material';
+} from "@mui/material";
 import {
   ShoppingCart as ShoppingCartIcon,
   Person as PersonIcon,
@@ -32,7 +32,8 @@ import {
   Search as SearchIcon,
   Close as CloseIcon,
   Delete as DeleteIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
+import customerService from "../../services/customerService";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -40,7 +41,7 @@ function Header() {
   const [categoryMenuAnchor, setCategoryMenuAnchor] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [cartAnchorEl, setCartAnchorEl] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchRef = useRef(null);
@@ -50,16 +51,16 @@ function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
     setIsLoggedIn(!!token && !!user);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleProfileMouseEnter = () => {
@@ -86,46 +87,58 @@ function Header() {
     setCategoryMenuAnchor(null);
   };
 
-  const mockProducts = [
-    { id: 1, name: 'Gaming Laptop', price: 1299.99, category: 'Laptops' },
-    { id: 2, name: 'Wireless Mouse', price: 29.99, category: 'Accessories' },
-    { id: 3, name: 'Mechanical Keyboard', price: 129.99, category: 'Accessories' },
-  ];
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await customerService.queryProducts({
+          page: 1,
+          limit: 1000,
+        });
+        setProducts(response.items);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const categories = [
     {
       id: 1,
-      name: 'Laptop',
-      subcategories: ['Gaming', 'Văn phòng', 'Học sinh - Sinh viên'],
-      brands: ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus'],
+      name: "Laptop",
+      subcategories: ["Gaming", "Văn phòng", "Học sinh - Sinh viên"],
+      brands: ["Dell", "HP", "Lenovo", "Apple", "Asus"],
     },
     {
       id: 2,
-      name: 'Điện thoại',
-      subcategories: ['Điện thoại 5G', 'Phổ thông 4G', 'Điện thoại gập'],
-      brands: ['Apple', 'Samsung', 'Xiaomi', 'OnePlus'],
+      name: "Điện thoại",
+      subcategories: ["Điện thoại 5G", "Phổ thông 4G", "Điện thoại gập"],
+      brands: ["Apple", "Samsung", "Xiaomi", "OnePlus"],
     },
     {
       id: 3,
-      name: 'Tai nghe',
-      subcategories: ['Không dây', 'Gaming', 'Thể thao'],
-      brands: ['Sony', 'Bose', 'JBL', 'Apple'],
+      name: "Tai nghe",
+      subcategories: ["Không dây", "Gaming", "Thể thao"],
+      brands: ["Sony", "Bose", "JBL", "Apple"],
     },
   ];
 
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
-      name: 'Wireless Headphones',
+      name: "Wireless Headphones",
       price: 199.99,
-      image: 'https://via.placeholder.com/50x50',
+      image: "https://via.placeholder.com/50x50",
       quantity: 1,
     },
     {
       id: 2,
-      name: 'Gaming Laptop',
+      name: "Gaming Laptop",
       price: 1299.99,
-      image: 'https://via.placeholder.com/50x50',
+      image: "https://via.placeholder.com/50x50",
       quantity: 1,
     },
   ]);
@@ -135,10 +148,8 @@ function Header() {
     setSearchQuery(query);
 
     if (query.trim()) {
-      const results = mockProducts.filter(
-        (product) =>
-          product.name.toLowerCase().includes(query.toLowerCase()) ||
-          product.category.toLowerCase().includes(query.toLowerCase())
+      const results = products.filter((product) =>
+        product.product_name.toLowerCase().includes(query.toLowerCase())
       );
       setSearchResults(results);
     } else {
@@ -147,12 +158,12 @@ function Header() {
   };
 
   const handleRemoveFromCart = (itemId) => {
-    setCartItems(cartItems.filter(item => item.id !== itemId));
+    setCartItems(cartItems.filter((item) => item.id !== itemId));
   };
 
   const handleClickAway = () => {
     setSearchResults([]);
-    setSearchQuery('');
+    setSearchQuery("");
     setIsSearchOpen(false);
   };
 
@@ -184,9 +195,8 @@ function Header() {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2, display: { sm: 'none' } }}
-            onClick={handleMobileMenuOpen}
-          >
+            sx={{ mr: 2, display: { sm: "none" } }}
+            onClick={handleMobileMenuOpen}>
             <MenuIcon />
           </IconButton>
 
@@ -197,34 +207,28 @@ function Header() {
             sx={{
               flexGrow: { xs: 1, md: 0 },
               mr: 2,
-              textDecoration: 'none',
-              color: 'inherit',
+              textDecoration: "none",
+              color: "inherit",
               fontWeight: 700,
-              display: isSearchOpen ? { xs: 'none', md: 'block' } : 'block',
-            }}
-          >
+              display: isSearchOpen ? { xs: "none", md: "block" } : "block",
+            }}>
             E-Commerce
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Box
               ref={categoryRef}
               onMouseEnter={handleCategoryMouseEnter}
-              onMouseLeave={handleCategoryMouseLeave}
-            >
-              <Button
-                color="inherit"
-                endIcon={<ArrowDownIcon />}
-              >
+              onMouseLeave={handleCategoryMouseLeave}>
+              <Button color="inherit" endIcon={<ArrowDownIcon />}>
                 Danh mục
               </Button>
               <Popper
                 open={Boolean(categoryMenuAnchor)}
                 anchorEl={categoryMenuAnchor}
                 placement="bottom-start"
-                style={{ zIndex: 1301 }}
-              >
-                <Paper sx={{ width: '800px', maxWidth: '100%' }}>
+                style={{ zIndex: 1301 }}>
+                <Paper sx={{ width: "800px", maxWidth: "100%" }}>
                   <Box p={2}>
                     <Grid container spacing={2}>
                       {categories.map((category) => (
@@ -238,9 +242,8 @@ function Header() {
                                 button
                                 key={sub}
                                 component={RouterLink}
-                                to={`/products?category=${category.name.toLowerCase()}&subcategory=${sub.toLowerCase()}`}
-                                onClick={handleMenuClose}
-                              >
+                                to={`/products/category=${category.name.toLowerCase()}&subcategory=${sub.toLowerCase()}`}
+                                onClick={handleMenuClose}>
                                 <ListItemText primary={sub} />
                               </ListItem>
                             ))}
@@ -249,8 +252,7 @@ function Header() {
                           <Typography
                             variant="subtitle2"
                             color="textSecondary"
-                            sx={{ mt: 1 }}
-                          >
+                            sx={{ mt: 1 }}>
                             Thương hiệu phổ biến
                           </Typography>
                           <List dense>
@@ -260,8 +262,7 @@ function Header() {
                                 key={brand}
                                 component={RouterLink}
                                 to={`/products?brand=${brand.toLowerCase()}`}
-                                onClick={handleMenuClose}
-                              >
+                                onClick={handleMenuClose}>
                                 <ListItemText primary={brand} />
                               </ListItem>
                             ))}
@@ -286,19 +287,22 @@ function Header() {
           <Box
             ref={searchRef}
             sx={{
-              position: 'relative',
+              position: "relative",
               flexGrow: isSearchOpen ? 1 : 0,
-              display: { xs: isSearchOpen ? 'flex' : 'none', md: 'flex' },
+              display: { xs: isSearchOpen ? "flex" : "none", md: "flex" },
               backgroundColor: (theme) =>
-                isSearchOpen ? alpha(theme.palette.common.white, 0.15) : 'transparent',
-              '&:hover': {
+                isSearchOpen
+                  ? alpha(theme.palette.common.white, 0.15)
+                  : "transparent",
+              "&:hover": {
                 backgroundColor: (theme) =>
-                  isSearchOpen ? alpha(theme.palette.common.white, 0.25) : 'transparent',
+                  isSearchOpen
+                    ? alpha(theme.palette.common.white, 0.25)
+                    : "transparent",
               },
               borderRadius: 1,
               marginRight: 2,
-            }}
-          >
+            }}>
             {isSearchOpen && (
               <>
                 <InputBase
@@ -306,9 +310,9 @@ function Header() {
                   value={searchQuery}
                   onChange={handleSearch}
                   sx={{
-                    color: 'inherit',
-                    padding: '4px 8px',
-                    paddingLeft: '1rem',
+                    color: "inherit",
+                    padding: "4px 8px",
+                    paddingLeft: "1rem",
                     flex: 1,
                   }}
                   autoFocus
@@ -316,28 +320,26 @@ function Header() {
                 {searchResults.length > 0 && (
                   <Paper
                     sx={{
-                      position: 'absolute',
-                      top: '100%',
+                      position: "absolute",
+                      top: "100%",
                       left: 0,
                       right: 0,
                       zIndex: 1300,
                       mt: 1,
-                      maxHeight: '400px',
-                      overflow: 'auto',
-                    }}
-                  >
+                      maxHeight: "400px",
+                      overflow: "auto",
+                    }}>
                     <List>
                       {searchResults.map((product) => (
                         <ListItem
                           key={product.id}
                           component={RouterLink}
-                          to={`/products/${product.id}`}
+                          to={`/product/${product.product_id}`}
                           onClick={handleClickAway}
-                          button
-                        >
+                          button>
                           <ListItemText
-                            primary={product.name}
-                            secondary={`$${product.price} - ${product.category}`}
+                            primary={product.product_name}
+                            secondary={`${product.price} VND`}
                           />
                         </ListItem>
                       ))}
@@ -351,16 +353,12 @@ function Header() {
             </IconButton>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
               ref={cartRef}
               onMouseEnter={handleCartMouseEnter}
-              onMouseLeave={handleCartMouseLeave}
-            >
-              <IconButton
-                color="inherit"
-                aria-label="cart"
-              >
+              onMouseLeave={handleCartMouseLeave}>
+              <IconButton color="inherit" aria-label="cart">
                 <Badge badgeContent={cartItems.length} color="secondary">
                   <ShoppingCartIcon />
                 </Badge>
@@ -371,39 +369,43 @@ function Header() {
                 open={Boolean(cartAnchorEl)}
                 onClose={() => setCartAnchorEl(null)}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 PaperProps={{
-                  sx: { width: '350px', maxWidth: '100%' },
+                  sx: { width: "350px", maxWidth: "100%" },
                   onMouseEnter: handleCartMouseEnter,
                   onMouseLeave: handleCartMouseLeave,
-                }}
-              >
+                }}>
                 <Box p={2}>
                   <Typography variant="h6" gutterBottom>
                     Shopping Cart ({cartItems.length} items)
                   </Typography>
                   {cartItems.map((item) => (
-                    <Card key={item.id} sx={{ mb: 1, display: 'flex' }}>
+                    <Card key={item.id} sx={{ mb: 1, display: "flex" }}>
                       <CardMedia
                         component="img"
-                        sx={{ width: 50, height: 50, objectFit: 'cover' }}
+                        sx={{ width: 50, height: 50, objectFit: "cover" }}
                         image={item.image}
                         alt={item.name}
                       />
                       <CardContent sx={{ flex: 1, py: 1, pr: 1 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Typography variant="subtitle2">{item.name}</Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}>
+                          <Typography variant="subtitle2">
+                            {item.name}
+                          </Typography>
                           <IconButton
                             size="small"
                             onClick={() => handleRemoveFromCart(item.id)}
-                            sx={{ ml: 1, p: 0.5 }}
-                          >
+                            sx={{ ml: 1, p: 0.5 }}>
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Box>
@@ -416,11 +418,10 @@ function Header() {
                   <Divider sx={{ my: 1 }} />
                   <Box
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
+                      display: "flex",
+                      justifyContent: "space-between",
                       mb: 2,
-                    }}
-                  >
+                    }}>
                     <Typography variant="subtitle1">Total:</Typography>
                     <Typography variant="subtitle1">
                       ${cartTotal.toFixed(2)}
@@ -431,8 +432,7 @@ function Header() {
                     fullWidth
                     component={RouterLink}
                     to="/cart"
-                    onClick={() => setCartAnchorEl(null)}
-                  >
+                    onClick={() => setCartAnchorEl(null)}>
                     View Cart
                   </Button>
                 </Box>
@@ -442,8 +442,7 @@ function Header() {
             <Box
               ref={profileRef}
               onMouseEnter={handleProfileMouseEnter}
-              onMouseLeave={handleProfileMouseLeave}
-            >
+              onMouseLeave={handleProfileMouseLeave}>
               <IconButton color="inherit">
                 <PersonIcon />
               </IconButton>
@@ -455,16 +454,21 @@ function Header() {
                 PaperProps={{
                   onMouseEnter: handleProfileMouseEnter,
                   onMouseLeave: handleProfileMouseLeave,
-                }}
-              >
+                }}>
                 {isLoggedIn ? (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 ) : (
                   <>
-                    <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
+                    <MenuItem
+                      component={RouterLink}
+                      to="/login"
+                      onClick={handleMenuClose}>
                       Login
                     </MenuItem>
-                    <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
+                    <MenuItem
+                      component={RouterLink}
+                      to="/register"
+                      onClick={handleMenuClose}>
                       Register
                     </MenuItem>
                   </>
@@ -476,8 +480,7 @@ function Header() {
           <Menu
             anchorEl={mobileMenuAnchorEl}
             open={Boolean(mobileMenuAnchorEl)}
-            onClose={handleMenuClose}
-          >
+            onClose={handleMenuClose}>
             <MenuItem onClick={handleMenuClose}>
               <Typography variant="subtitle1" fontWeight={600}>
                 Danh mục
@@ -489,28 +492,42 @@ function Header() {
                 component={RouterLink}
                 to={`/products?category=${category.name.toLowerCase()}`}
                 onClick={handleMenuClose}
-                sx={{ pl: 3 }}
-              >
+                sx={{ pl: 3 }}>
                 {category.name}
               </MenuItem>
             ))}
-            <MenuItem component={RouterLink} to="/products" onClick={handleMenuClose}>
+            <MenuItem
+              component={RouterLink}
+              to="/products"
+              onClick={handleMenuClose}>
               Sản phẩm
             </MenuItem>
-            <MenuItem component={RouterLink} to="/contact" onClick={handleMenuClose}>
+            <MenuItem
+              component={RouterLink}
+              to="/contact"
+              onClick={handleMenuClose}>
               Liên hệ
             </MenuItem>
-            <MenuItem component={RouterLink} to="/cart" onClick={handleMenuClose}>
+            <MenuItem
+              component={RouterLink}
+              to="/cart"
+              onClick={handleMenuClose}>
               Cart
             </MenuItem>
             {isLoggedIn ? (
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             ) : (
               <>
-                <MenuItem component={RouterLink} to="/login" onClick={handleMenuClose}>
+                <MenuItem
+                  component={RouterLink}
+                  to="/login"
+                  onClick={handleMenuClose}>
                   Login
                 </MenuItem>
-                <MenuItem component={RouterLink} to="/register" onClick={handleMenuClose}>
+                <MenuItem
+                  component={RouterLink}
+                  to="/register"
+                  onClick={handleMenuClose}>
                   Register
                 </MenuItem>
               </>
