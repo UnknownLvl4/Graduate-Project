@@ -65,7 +65,7 @@ function ProductsBySubcategory() {
         sx={{ mt: 4 }}></Typography>
       <Grid container spacing={2}>
         {currentProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
             <Card
               onClick={() =>
                 (window.location.href = `/product/${product.product_id}`)

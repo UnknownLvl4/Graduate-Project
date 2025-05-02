@@ -104,27 +104,31 @@ function Header() {
 
     fetchProducts();
   }, []);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
 
-  const categories = [
-    {
-      id: 1,
-      name: "Laptop",
-      subcategories: ["Gaming", "Văn phòng", "Học sinh - Sinh viên"],
-      brands: ["Dell", "HP", "Lenovo", "Apple", "Asus"],
-    },
-    {
-      id: 2,
-      name: "Điện thoại",
-      subcategories: ["Điện thoại 5G", "Phổ thông 4G", "Điện thoại gập"],
-      brands: ["Apple", "Samsung", "Xiaomi", "OnePlus"],
-    },
-    {
-      id: 3,
-      name: "Tai nghe",
-      subcategories: ["Không dây", "Gaming", "Thể thao"],
-      brands: ["Sony", "Bose", "JBL", "Apple"],
-    },
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await customerService.queryCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    const fetchSubCategories = async () => {
+      try {
+        const response = await customerService.querySubCategories();
+        setSubCategories(response);
+      } catch (error) {
+        console.error("Failed to fetch subcategories:", error);
+      }
+    };
+
+    fetchCategories();
+    fetchSubCategories();
+  }, []);
 
   const [cartItems, setCartItems] = useState([
     {
@@ -233,39 +237,33 @@ function Header() {
                     <Grid container spacing={2}>
                       {categories.map((category) => (
                         <Grid item xs={4} key={category.id}>
-                          <Typography variant="h6" gutterBottom>
+                          <Button
+                            variant="text"
+                            fullWidth
+                            component={RouterLink}
+                            to={`/products/${category.id}`}
+                            onClick={handleMenuClose}
+                            sx={{
+                              justifyContent: "flex-start",
+                              textTransform: "none",
+                              fontWeight: "bold",
+                              fontSize: "1.5rem",
+                            }}>
                             {category.name}
-                          </Typography>
+                          </Button>
                           <List dense>
-                            {category.subcategories.map((sub) => (
-                              <ListItem
-                                button
-                                key={sub}
-                                component={RouterLink}
-                                to={`/products/category=${category.name.toLowerCase()}&subcategory=${sub.toLowerCase()}`}
-                                onClick={handleMenuClose}>
-                                <ListItemText primary={sub} />
-                              </ListItem>
-                            ))}
-                          </List>
-                          <Divider />
-                          <Typography
-                            variant="subtitle2"
-                            color="textSecondary"
-                            sx={{ mt: 1 }}>
-                            Thương hiệu phổ biến
-                          </Typography>
-                          <List dense>
-                            {category.brands.map((brand) => (
-                              <ListItem
-                                button
-                                key={brand}
-                                component={RouterLink}
-                                to={`/products?brand=${brand.toLowerCase()}`}
-                                onClick={handleMenuClose}>
-                                <ListItemText primary={brand} />
-                              </ListItem>
-                            ))}
+                            {subCategories
+                              .filter((s) => s.category_id === category.id)
+                              .map((sub) => (
+                                <ListItem
+                                  button
+                                  key={sub.id}
+                                  component={RouterLink}
+                                  to={`/products/${category.id}/${sub.id}`}
+                                  onClick={handleMenuClose}>
+                                  <ListItemText primary={sub.name} />
+                                </ListItem>
+                              ))}
                           </List>
                         </Grid>
                       ))}
@@ -332,7 +330,7 @@ function Header() {
                     <List>
                       {searchResults.map((product) => (
                         <ListItem
-                          key={product.id}
+                          key={product.product_id}
                           component={RouterLink}
                           to={`/product/${product.product_id}`}
                           onClick={handleClickAway}
@@ -490,7 +488,7 @@ function Header() {
               <MenuItem
                 key={category.id}
                 component={RouterLink}
-                to={`/products?category=${category.name.toLowerCase()}`}
+                to={`/products/${category.id}`}
                 onClick={handleMenuClose}
                 sx={{ pl: 3 }}>
                 {category.name}

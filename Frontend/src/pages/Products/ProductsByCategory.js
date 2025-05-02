@@ -45,7 +45,7 @@ function ProductsByCategory() {
     fetchProducts();
     fetchCategories();
     fetchSubCategories();
-  }, []);
+  }, [category]);
 
   return (
     <Container sx={{ mt: 4, paddingTop: "20px", paddingBottom: "20px" }}>
@@ -66,7 +66,7 @@ function ProductsByCategory() {
               )
               .slice(0, 4) // Limit to 4 products per subcategory
               .map((product) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
                   <Card
                     onClick={() =>
                       (window.location.href = `/product/${product.product_id}`)

@@ -50,7 +50,7 @@ function AllProductsByCategory() {
               .filter((product) => product.category_id === category.id)
               .slice(0, 4) // Display only the first 4 products in each category
               .map((product) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
                   <Card
                     onClick={() =>
                       (window.location.href = `/product/${product.product_id}`)
