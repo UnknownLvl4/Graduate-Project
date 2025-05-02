@@ -97,7 +97,7 @@ function Home() {
                   <Button
                     variant="contained"
                     component={RouterLink}
-                    to={`/products/${product.product_id}`}
+                    to={`/product/${product.product_id}`}
                     sx={{ mt: 2 }}
                     fullWidth>
                     View Details

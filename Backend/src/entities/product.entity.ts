@@ -5,6 +5,9 @@ export class Product {
   @Column({ name: 'category_id' })
   category_id: string;
 
+  @Column({ name: 'sub_category_id' })
+  sub_category_id: string;
+
   @PrimaryColumn({ name: 'product_id' })
   product_id: string;
 

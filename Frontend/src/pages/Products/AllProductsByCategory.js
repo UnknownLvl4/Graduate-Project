@@ -10,7 +10,6 @@ import {
 import customerService from "../../services/customerService";
 
 function AllProductsByCategory() {
-  //fetch products from the backend
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,13 +52,20 @@ function AllProductsByCategory() {
                   <Card>
                     <CardMedia
                       component="img"
-                      height="140"
+                      height="200"
                       image={product.image}
                       alt={product.name}
                       sx={{ objectFit: "contain" }}
                     />
                     <CardContent>
-                      <Typography variant="h6">
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                        title={product.product_name}>
                         {product.product_name}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">

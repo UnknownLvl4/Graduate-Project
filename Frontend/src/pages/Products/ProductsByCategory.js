@@ -1,41 +1,91 @@
-import React from 'react';
-import { Container, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+import customerService from "../../services/customerService";
 
-const mockProducts = [
-  { id: 1, name: 'Product 1', category: 'Category 1', subcategory: 'Subcategory A', brand: 'Brand A', image: 'https://via.placeholder.com/150' },
-  { id: 2, name: 'Product 2', category: 'Category 1', subcategory: 'Subcategory B', brand: 'Brand B', image: 'https://via.placeholder.com/150' },
-  { id: 3, name: 'Product 3', category: 'Category 2', subcategory: 'Subcategory A', brand: 'Brand A', image: 'https://via.placeholder.com/150' },
-];
+function ProductsByCategory() {
+  const { category } = useParams();
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
 
-function ProductsByCategory({ category }) {
-  const subcategories = [...new Set(mockProducts.filter(product => product.category === category).map(product => product.subcategory))];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await customerService.queryProducts({
+        page: 1,
+        limit: 1000,
+      });
+      const data = await response.items;
+      setProducts(data.filter((product) => product.category_id === category));
+    };
+
+    const fetchCategories = async () => {
+      const response = await customerService.queryCategories();
+      const data = await response;
+      setCategories(data);
+    };
+
+    const fetchSubCategories = async () => {
+      const response = await customerService.querySubCategories();
+      const data = await response;
+      setSubCategories(
+        data.filter((subcategory) => subcategory.category_id === category)
+      );
+    };
+
+    fetchProducts();
+    fetchCategories();
+    fetchSubCategories();
+  }, []);
 
   return (
     <Container>
-      <Typography variant="h4" component="h1" gutterBottom sx={{ mt: 4 }}>
-        Products in {category}
-      </Typography>
-      {subcategories.map(subcategory => (
-        <div key={subcategory}>
+      {subCategories.map((subcategory) => (
+        <div key={subcategory.id}>
           <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-            {subcategory}
+            {subcategory.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <a href={`/products/${category}/${subcategory.id}`}>See more</a>
           </Typography>
           <Grid container spacing={2}>
-            {mockProducts
-              .filter(product => product.category === category && product.subcategory === subcategory)
-              .map(product => (
+            {products
+              .filter(
+                (product) =>
+                  product.category_id === category &&
+                  product.sub_category_id === subcategory.id
+              )
+              .slice(0, 4) // Limit to 4 products per subcategory
+              .map((product) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
                   <Card>
                     <CardMedia
                       component="img"
-                      height="140"
+                      height="200"
                       image={product.image}
                       alt={product.name}
+                      sx={{ objectFit: "contain" }}
                     />
                     <CardContent>
-                      <Typography variant="h6">{product.name}</Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                        title={product.product_name}>
+                        {product.product_name}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Brand: {product.brand}
+                        $ {product.price}
                       </Typography>
                     </CardContent>
                   </Card>

@@ -73,6 +73,16 @@ const queryCategories = async () => {
   }
 };
 
+const querySubCategories = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/sub-categories`);
+    return response.data;
+  } catch (error) {
+    console.error("Error querying subcategories:", error);
+    throw error;
+  }
+};
+
 const customerService = {
   queryProducts,
   queryMostExpensiveProductByCategory,
@@ -81,6 +91,7 @@ const customerService = {
   addProductComment,
   getAllProducts,
   queryCategories,
+  querySubCategories,
 };
 
 export default customerService;
