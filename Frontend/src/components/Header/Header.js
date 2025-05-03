@@ -6,7 +6,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Badge,
   Menu,
   MenuItem,
   Box,
@@ -18,19 +17,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Card,
-  CardMedia,
-  CardContent,
   alpha,
 } from "@mui/material";
 import {
-  ShoppingCart as ShoppingCartIcon,
   Person as PersonIcon,
   Menu as MenuIcon,
   KeyboardArrowDown as ArrowDownIcon,
   Search as SearchIcon,
   Close as CloseIcon,
-  Delete as DeleteIcon,
 } from "@mui/icons-material";
 import customerService from "../../services/customerService";
 import CartMenu from "../Cart/CartMenu";
@@ -40,7 +34,6 @@ function Header() {
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState(null);
   const [categoryMenuAnchor, setCategoryMenuAnchor] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [cartAnchorEl, setCartAnchorEl] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -105,22 +98,6 @@ function Header() {
     fetchSubCategories();
   }, []);
 
-  const [cartItems, setCartItems] = useState([]);
-
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const userId = JSON.parse(localStorage.getItem("user")).id;
-        const response = await customerService.queryCartItems(userId);
-        setCartItems(response);
-      } catch (error) {
-        console.error("Failed to fetch cart items:", error);
-      }
-    };
-
-    fetchCartItems();
-  }, []);
-
   const handleSearch = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -149,7 +126,6 @@ function Header() {
     setAnchorEl(null);
     setMobileMenuAnchorEl(null);
     setCategoryMenuAnchor(null);
-    setCartAnchorEl(null);
   };
 
   const toggleSearch = () => {

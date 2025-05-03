@@ -36,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import * as adminService from "../../services/adminService";
 import OrdersSection from "../../components/Admin/OrdersSection";
 import DiscountSection from "../../components/Admin/DiscountSection";
+import StatisticSection from "../../components/Admin/StatisticSection"; // Import the new component
 
 // TabPanel component for different sections
 function TabPanel({ children, value, index, ...other }) {
@@ -911,7 +912,8 @@ function Dashboard() {
               <Tab label="Sản phẩm" />
               <Tab label="Đơn hàng" />
               <Tab label="Người dùng" />
-              <Tab label="Giảm giá" /> {/* Add Discount Tab */}
+              <Tab label="Giảm giá" />
+              <Tab label="Thống kê" />
             </Tabs>
 
             <TabPanel value={tab} index={0}>
@@ -925,6 +927,9 @@ function Dashboard() {
             </TabPanel>
             <TabPanel value={tab} index={3}>
               {renderDiscountSection()}
+            </TabPanel>
+            <TabPanel value={tab} index={4}>
+              <StatisticSection />
             </TabPanel>
           </Paper>
         </Grid>
