@@ -63,30 +63,6 @@ function Header() {
     navigate("/login");
   };
 
-  const handleProfileMouseEnter = () => {
-    setAnchorEl(profileRef.current);
-  };
-
-  const handleProfileMouseLeave = () => {
-    setAnchorEl(null);
-  };
-
-  const handleCartMouseEnter = (event) => {
-    setCartAnchorEl(cartRef.current);
-  };
-
-  const handleCartMouseLeave = () => {
-    setCartAnchorEl(null);
-  };
-
-  const handleCategoryMouseEnter = (event) => {
-    setCategoryMenuAnchor(categoryRef.current);
-  };
-
-  const handleCategoryMouseLeave = () => {
-    setCategoryMenuAnchor(null);
-  };
-
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -130,22 +106,21 @@ function Header() {
     fetchSubCategories();
   }, []);
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 199.99,
-      image: "https://via.placeholder.com/50x50",
-      quantity: 1,
-    },
-    {
-      id: 2,
-      name: "Gaming Laptop",
-      price: 1299.99,
-      image: "https://via.placeholder.com/50x50",
-      quantity: 1,
-    },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const userId = JSON.parse(localStorage.getItem("user")).id;
+        const response = await customerService.queryCartItems(userId);
+        setCartItems(response);
+      } catch (error) {
+        console.error("Failed to fetch cart items:", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
 
   const handleSearch = (event) => {
     const query = event.target.value;
@@ -162,7 +137,14 @@ function Header() {
   };
 
   const handleRemoveFromCart = (itemId) => {
-    setCartItems(cartItems.filter((item) => item.id !== itemId));
+    customerService
+      .removeFromCart(itemId)
+      .then(() => {
+        setCartItems(cartItems.filter((item) => item.id !== itemId));
+      })
+      .catch((error) => {
+        console.error("Failed to remove item from cart:", error);
+      });
   };
 
   const handleClickAway = () => {
@@ -185,11 +167,6 @@ function Header() {
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
-
-  const cartTotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
 
   return (
     <AppBar position="sticky">
@@ -220,11 +197,15 @@ function Header() {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Box
-              ref={categoryRef}
-              onMouseEnter={handleCategoryMouseEnter}
-              onMouseLeave={handleCategoryMouseLeave}>
-              <Button color="inherit" endIcon={<ArrowDownIcon />}>
+            <Box ref={categoryRef}>
+              <Button
+                color="inherit"
+                endIcon={<ArrowDownIcon />}
+                onClick={(event) =>
+                  setCategoryMenuAnchor(
+                    categoryMenuAnchor ? null : event.currentTarget
+                  )
+                }>
                 Danh mục
               </Button>
               <Popper
@@ -336,6 +317,9 @@ function Header() {
                           onClick={handleClickAway}
                           button>
                           <ListItemText
+                            primaryTypographyProps={{
+                              noWrap: true,
+                            }}
                             primary={product.product_name}
                             secondary={`${product.price} VND`}
                           />
@@ -352,11 +336,13 @@ function Header() {
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              ref={cartRef}
-              onMouseEnter={handleCartMouseEnter}
-              onMouseLeave={handleCartMouseLeave}>
-              <IconButton color="inherit" aria-label="cart">
+            <Box ref={cartRef} sx={{ marginRight: 2 }}>
+              <IconButton
+                color="inherit"
+                aria-label="cart"
+                onClick={(event) =>
+                  setCartAnchorEl(cartAnchorEl ? null : event.currentTarget)
+                }>
                 <Badge badgeContent={cartItems.length} color="secondary">
                   <ShoppingCartIcon />
                 </Badge>
@@ -376,20 +362,28 @@ function Header() {
                 }}
                 PaperProps={{
                   sx: { width: "350px", maxWidth: "100%" },
-                  onMouseEnter: handleCartMouseEnter,
-                  onMouseLeave: handleCartMouseLeave,
                 }}>
                 <Box p={2}>
                   <Typography variant="h6" gutterBottom>
                     Shopping Cart ({cartItems.length} items)
                   </Typography>
                   {cartItems.map((item) => (
-                    <Card key={item.id} sx={{ mb: 1, display: "flex" }}>
+                    <Card
+                      key={item.id}
+                      sx={{
+                        mb: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        paddingLeft: 0.5,
+                      }}>
+                      {item.quantity} ×
                       <CardMedia
-                        component="img"
-                        sx={{ width: 50, height: 50, objectFit: "cover" }}
+                        sx={{ width: 80, height: 80, objectFit: "contain" }}
                         image={item.image}
-                        alt={item.name}
+                        alt={item.product_name}
+                        component={RouterLink}
+                        to={`/product/${item.product_id}`}
+                        onClick={() => setCartAnchorEl(null)}
                       />
                       <CardContent sx={{ flex: 1, py: 1, pr: 1 }}>
                         <Box
@@ -397,8 +391,18 @@ function Header() {
                             display: "flex",
                             justifyContent: "space-between",
                           }}>
-                          <Typography variant="subtitle2">
-                            {item.name}
+                          <Typography
+                            variant="subtitle2"
+                            noWrap
+                            sx={{
+                              maxWidth: "150px",
+                              textDecoration: "none",
+                              color: "inherit",
+                            }}
+                            component={RouterLink}
+                            to={`/product/${item.product_id}`}
+                            onClick={() => setCartAnchorEl(null)}>
+                            {item.product_name}
                           </Typography>
                           <IconButton
                             size="small"
@@ -408,51 +412,36 @@ function Header() {
                           </IconButton>
                         </Box>
                         <Typography variant="body2" color="text.secondary">
-                          {item.quantity} × ${item.price}
+                          ${item.price}
                         </Typography>
                       </CardContent>
                     </Card>
                   ))}
-                  <Divider sx={{ my: 1 }} />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      mb: 2,
-                    }}>
-                    <Typography variant="subtitle1">Total:</Typography>
-                    <Typography variant="subtitle1">
-                      ${cartTotal.toFixed(2)}
-                    </Typography>
-                  </Box>
                   <Button
                     variant="contained"
                     fullWidth
                     component={RouterLink}
                     to="/cart"
                     onClick={() => setCartAnchorEl(null)}>
-                    View Cart
+                    Thanh toán
                   </Button>
                 </Box>
               </Menu>
             </Box>
 
-            <Box
-              ref={profileRef}
-              onMouseEnter={handleProfileMouseEnter}
-              onMouseLeave={handleProfileMouseLeave}>
-              <IconButton color="inherit">
+            <Box ref={profileRef}>
+              <IconButton
+                color="inherit"
+                onClick={(event) =>
+                  setAnchorEl(anchorEl ? null : event.currentTarget)
+                }>
                 <PersonIcon />
               </IconButton>
 
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                PaperProps={{
-                  onMouseEnter: handleProfileMouseEnter,
-                  onMouseLeave: handleProfileMouseLeave,
-                }}>
+                onClose={handleMenuClose}>
                 {isLoggedIn ? (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 ) : (

@@ -31,8 +31,8 @@ import { CartItem } from './entities/cart-item.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
-      entities: [Product, User, Review, Category, SubCategory, Cart, CartItem], // Add Review entity here
-      synchronize: false, // Disable synchronization
+      entities: [Product, User, Review, Category, SubCategory, Cart, CartItem],
+      synchronize: false,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),

@@ -83,6 +83,36 @@ const querySubCategories = async () => {
   }
 };
 
+const queryCartItems = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/carts/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error querying cart items:", error);
+    throw error;
+  }
+};
+
+const removeFromCart = async (cart_item_id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/cart-items/${cart_item_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+    throw error;
+  }
+}
+
+const addToCart = async (cartItem) => {
+  try {
+    const response = await axios.post(`${API_URL}/cart-items`, cartItem);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    throw error;
+  }
+};
+
 const customerService = {
   queryProducts,
   queryMostExpensiveProductByCategory,
@@ -92,6 +122,9 @@ const customerService = {
   getAllProducts,
   queryCategories,
   querySubCategories,
+  queryCartItems,
+  removeFromCart,
+  addToCart,
 };
 
 export default customerService;

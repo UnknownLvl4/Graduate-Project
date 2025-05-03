@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Typography, Grid, Paper, Box, Button } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  Box,
+  Button,
+  TextField,
+} from "@mui/material";
 import * as CusomterService from "../../services/customerService";
 import ProductComments from "../../components/ProductComments/ProductComments";
 
@@ -9,6 +17,7 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1); // State for quantity
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -26,6 +35,34 @@ function ProductDetail() {
 
     if (productId) fetchProduct();
   }, [productId]);
+
+  const handleAddToCart = async () => {
+    try {
+      const item = {
+        user_id: JSON.parse(localStorage.getItem("user")).id,
+        product_id: product.product_id,
+        quantity: quantity,
+      };
+      const response = await CusomterService.default.addToCart(item);
+      if (response) {
+        alert("Thêm sản phẩm vào giỏ hàng thành công!");
+        setQuantity(1);
+        window.location.reload();
+      } else {
+        alert("Thêm sản phẩm vào giỏ hàng thất bại!");
+      }
+    } catch (err) {
+      alert(err.message || "Thêm sản phẩm vào giỏ hàng thất bại!");
+    }
+  };
+
+  const handleQuantityChange = (event) => {
+    const value = Math.max(
+      1,
+      Math.min(product.stock_quantity, Number(event.target.value))
+    );
+    setQuantity(value);
+  };
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -67,14 +104,29 @@ function ProductDetail() {
                 Stock: {product.stock_quantity}
               </Typography>
             </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              sx={{ mt: 3 }}
-              disabled={product.stock_quantity === 0}>
-              {product.stock_quantity === 0 ? "Out of Stock" : "Add to Cart"}
-            </Button>
+            <Box sx={{ mt: 3, display: "flex", alignItems: "center", gap: 2 }}>
+              <TextField
+                type="number"
+                label="Quantity"
+                variant="outlined"
+                size="small"
+                value={quantity}
+                onChange={handleQuantityChange}
+                inputProps={{
+                  min: 1,
+                  max: product.stock_quantity,
+                }}
+                sx={{ width: "100px" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={product.stock_quantity === 0}
+                onClick={handleAddToCart}>
+                {product.stock_quantity === 0 ? "Out of Stock" : "Add to Cart"}
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </Paper>

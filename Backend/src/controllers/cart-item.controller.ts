@@ -28,9 +28,10 @@ export class CartItemController {
   }
 
   @Post()
-  create(@Body() cartItem: { cart_id: string; product_id: string; sold_price: number; quantity: number }) {
+  create(@Body() cartItem: { user_id: string; product_id: string; quantity?: number }) {
     this.logger.log('Creating a new cart item');
-    return this.cartItemService.create(cartItem);
+    const cartItemWithDefaults = { ...cartItem, quantity: cartItem.quantity ?? 1 };
+    return this.cartItemService.create(cartItemWithDefaults);
   }
 
   @Delete(':cartItemId')

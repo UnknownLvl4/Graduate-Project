@@ -12,9 +12,6 @@ export class CartItem {
   @Column()
   product_id: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  sold_price: number;
-
   @Column('int')
   quantity: number;
 

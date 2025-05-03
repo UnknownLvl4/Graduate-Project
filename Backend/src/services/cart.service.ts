@@ -14,8 +14,16 @@ export class CartService {
     return await this.cartRepository.find();
   }
 
-  async findByUser(userId: string): Promise<Cart[]> {
-    return await this.cartRepository.find({ where: { user_id: userId } });
+  async findByUser(userId: string): Promise<Cart[] | any[]> {
+    return await this.cartRepository.query(
+      `SELECT ci.*, p.* 
+       FROM cart_item ci
+       INNER JOIN product p ON ci.product_id = p.product_id
+       WHERE ci.cart_id IN (
+       SELECT cart_id FROM cart WHERE user_id = $1
+       )`,
+      [userId],
+    );
   }
 
   async create(cartData: { user_id: string }): Promise<Cart> {

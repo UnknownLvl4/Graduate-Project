@@ -228,7 +228,7 @@ export class ProductService {
 
       const result = await this.productRepository.query(query);
 
-      this.logger.debug('Most expensive products by category and sub-category retrieved successfully:', result);
+      // this.logger.debug('Most expensive products by category and sub-category retrieved successfully:', result);
       return result;
     } catch (error) {
       this.logger.error('Error finding the most expensive products by category and sub-category:', error);
