@@ -16,6 +16,10 @@ import { CategoryModule } from './modules/category.module';
 import { Category } from './entities/category.entity';
 import { SubCategory } from './entities/sub-category.entity';
 import { SubCategoryModule } from './modules/sub-category.module';
+import { CartModule } from './modules/cart.module';
+import { CartItemModule } from './modules/cart-item.module';
+import { Cart } from './entities/cart.entity';
+import { CartItem } from './entities/cart-item.entity';
 
 @Module({
   imports: [
@@ -27,7 +31,7 @@ import { SubCategoryModule } from './modules/sub-category.module';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
-      entities: [Product, User, Review, Category, SubCategory], // Add Review entity here
+      entities: [Product, User, Review, Category, SubCategory, Cart, CartItem], // Add Review entity here
       synchronize: false, // Disable synchronization
     }),
     ServeStaticModule.forRoot({
@@ -40,6 +44,8 @@ import { SubCategoryModule } from './modules/sub-category.module';
     ReviewModule,
     CategoryModule,
     SubCategoryModule,
+    CartModule,
+    CartItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

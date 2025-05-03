@@ -5,13 +5,15 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { isAbsolute } from 'path';
+import { Cart } from '../entities/cart.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Cart)
+    private readonly cartRepository: Repository<Cart>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -39,6 +41,13 @@ export class AuthService {
       address,
     });
     await this.userRepository.save(newUser);
+
+    // Create a new cart for the user
+    const newCart = this.cartRepository.create({
+      cart_id: crypto.randomUUID(),
+      user_id: newUser.id,
+    });
+    await this.cartRepository.save(newCart);
 
     return { email: newUser.email };
   }

@@ -4,10 +4,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from '../controllers/auth.controller';
 import { AuthService } from '../services/auth.service';
 import { User } from '../entities/user.entity';
+import { Cart } from 'src/entities/cart.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Cart]),
     JwtModule.register({
       secret: 'your-secret-key', // Replace with a secure key
       signOptions: { expiresIn: '1h' }, // Token expiration time
