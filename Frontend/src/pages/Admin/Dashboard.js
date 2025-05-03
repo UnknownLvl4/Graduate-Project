@@ -35,6 +35,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import * as adminService from "../../services/adminService";
 import OrdersSection from "../../components/Admin/OrdersSection";
+import DiscountSection from "../../components/Admin/DiscountSection";
 
 // TabPanel component for different sections
 function TabPanel({ children, value, index, ...other }) {
@@ -879,6 +880,10 @@ function Dashboard() {
     </Dialog>
   );
 
+  const renderDiscountSection = () => (
+    <DiscountSection items={items} fetchData={fetchData} />
+  );
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
@@ -906,6 +911,7 @@ function Dashboard() {
               <Tab label="Sản phẩm" />
               <Tab label="Đơn hàng" />
               <Tab label="Người dùng" />
+              <Tab label="Giảm giá" /> {/* Add Discount Tab */}
             </Tabs>
 
             <TabPanel value={tab} index={0}>
@@ -916,6 +922,9 @@ function Dashboard() {
             </TabPanel>
             <TabPanel value={tab} index={2}>
               {renderUsersSection()}
+            </TabPanel>
+            <TabPanel value={tab} index={3}>
+              {renderDiscountSection()}
             </TabPanel>
           </Paper>
         </Grid>

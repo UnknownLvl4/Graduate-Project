@@ -76,3 +76,20 @@ export const getUsers = async () => {
 
 export const updateUser = (id, data) => axios.put(`${API_URL}/users/${id}`, data);
 export const deleteUser = (id) => axios.delete(`${API_URL}/users/${id}`);
+
+// Discounts
+export const getDiscounts = async () => {
+  return await axios.get(`${API_URL}/discounts`);
+};
+
+export const createDiscount = async (data) => {
+  return await axios.post(`${API_URL}/discounts`, data);
+};
+
+export const updateDiscount = async (id, data) => {
+  return await axios.put(`${API_URL}/discounts/${id}`, data);
+};
+
+export const deleteDiscount = async (id) => {
+  return await axios.delete(`${API_URL}/discounts/${id}`);
+};

@@ -24,6 +24,8 @@ import { BillModule } from './modules/bill.module';
 import { BillItemModule } from './modules/bill-item.module';
 import { BillItem } from './entities/bill-item.entity';
 import { Bill } from './entities/bill.entity';
+import { DiscountModule } from './modules/discount.module';
+import { Discount } from './entities/discount.entity';
 
 @Module({
   imports: [
@@ -35,7 +37,18 @@ import { Bill } from './entities/bill.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'E_commerce',
-      entities: [Product, User, Review, Category, SubCategory, Cart, CartItem, BillItem, Bill],
+      entities: [
+        Product,
+        User,
+        Review,
+        Category,
+        SubCategory,
+        Cart,
+        CartItem,
+        BillItem,
+        Bill,
+        Discount,
+      ],
       synchronize: false,
     }),
     ServeStaticModule.forRoot({
@@ -52,6 +65,7 @@ import { Bill } from './entities/bill.entity';
     CartItemModule,
     BillModule,
     BillItemModule,
+    DiscountModule,
   ],
   controllers: [AppController],
   providers: [AppService],
