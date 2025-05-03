@@ -11,12 +11,13 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import customerService from "../../services/customerService";
+import { useDiscounts } from "../../store/DiscountContext"; // Import the discount context
 
 function ProductsByCategory() {
   const { category } = useParams();
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const { discounts } = useDiscounts(); // Use the discount context
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -28,12 +29,6 @@ function ProductsByCategory() {
       setProducts(data.filter((product) => product.category_id === category));
     };
 
-    const fetchCategories = async () => {
-      const response = await customerService.queryCategories();
-      const data = await response;
-      setCategories(data);
-    };
-
     const fetchSubCategories = async () => {
       const response = await customerService.querySubCategories();
       const data = await response;
@@ -43,7 +38,6 @@ function ProductsByCategory() {
     };
 
     fetchProducts();
-    fetchCategories();
     fetchSubCategories();
   }, [category]);
 
@@ -65,46 +59,107 @@ function ProductsByCategory() {
                   product.sub_category_id === subcategory.id
               )
               .slice(0, 4) // Limit to 4 products per subcategory
-              .map((product) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
-                  <Card
-                    onClick={() =>
-                      (window.location.href = `/product/${product.product_id}`)
-                    }
-                    sx={{ cursor: "pointer" }}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={product.image}
-                      alt={product.name}
-                      sx={{ objectFit: "contain" }}
-                    />
-                    <CardContent>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                        title={product.product_name}>
-                        {product.product_name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        $ {product.price}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        component={RouterLink}
-                        to={`/product/${product.product_id}`}
-                        sx={{ mt: 2 }}
-                        fullWidth>
-                        View Details
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+              .map((product) => {
+                const discount = discounts.find(
+                  (d) => d.product_id === product.product_id
+                ); // Find the discount for the product
+
+                return (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
+                    <Card
+                      onClick={() =>
+                        (window.location.href = `/product/${product.product_id}`)
+                      }
+                      sx={{ cursor: "pointer", position: "relative" }}
+                    >
+                      {discount && (
+                        <Typography
+                          variant="body2"
+                          color="error"
+                          sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            backgroundColor: "rgba(255, 0, 0, 0.8)",
+                            color: "white",
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {discount.value}% OFF
+                        </Typography>
+                      )}
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={product.image}
+                        alt={product.name}
+                        sx={{ objectFit: "contain" }}
+                      />
+                      <CardContent>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                          title={product.product_name}
+                        >
+                          {product.product_name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {!discount && (
+                            <span
+                              style={{
+                                color: "red",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {product.price.toLocaleString()} VND
+                            </span>
+                          )}
+                          {discount && (
+                            <>
+                              <span
+                                style={{
+                                  color: "red",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {parseFloat(
+                                  product.price * (1 - discount.value / 100)
+                                ).toLocaleString()}{" "}
+                                VND
+                              </span>
+                              <span
+                                style={{
+                                  textDecoration: "line-through",
+                                  marginLeft: 8,
+                                  color: "gray",
+                                  fontSize: "0.8em",
+                                }}
+                              >
+                                {product.price.toLocaleString()} VND
+                              </span>
+                            </>
+                          )}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          component={RouterLink}
+                          to={`/product/${product.product_id}`}
+                          sx={{ mt: 2 }}
+                          fullWidth
+                        >
+                          View Details
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
           </Grid>
         </div>
       ))}

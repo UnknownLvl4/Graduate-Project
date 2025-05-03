@@ -12,12 +12,14 @@ import {
   Box,
 } from "@mui/material";
 import customerService from "../../services/customerService";
+import { useDiscounts } from "../../store/DiscountContext"; // Import the discount context
 
 function ProductsBySubcategory() {
   const { category, sub_category } = useParams(); // Get category and subcategory from URL params
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // Number of products per page
+  const { discounts } = useDiscounts(); // Use the discount context
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -62,48 +64,110 @@ function ProductsBySubcategory() {
         variant="h4"
         component="h1"
         gutterBottom
-        sx={{ mt: 4 }}></Typography>
+        sx={{ mt: 4 }}
+      ></Typography>
       <Grid container spacing={2}>
-        {currentProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
-            <Card
-              onClick={() =>
-                (window.location.href = `/product/${product.product_id}`)
-              }
-              sx={{ cursor: "pointer" }}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={product.image}
-                alt={product.name}
-                sx={{ objectFit: "contain" }}
-              />
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                  title={product.product_name}>
-                  {product.product_name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  $ {product.price}
-                </Typography>
-                <Button
-                  variant="contained"
-                  component={RouterLink}
-                  to={`/product/${product.product_id}`}
-                  sx={{ mt: 2 }}
-                  fullWidth>
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        {currentProducts.map((product) => {
+          const discount = discounts.find(
+            (d) => d.product_id === product.product_id
+          ); // Find the discount for the product
+
+          return (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={product.product_id}>
+              <Card
+                onClick={() =>
+                  (window.location.href = `/product/${product.product_id}`)
+                }
+                sx={{ cursor: "pointer", position: "relative" }}
+              >
+                {discount && (
+                  <Typography
+                    variant="body2"
+                    color="error"
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      backgroundColor: "rgba(255, 0, 0, 0.8)",
+                      color: "white",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {discount.value}% OFF
+                  </Typography>
+                )}
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={product.image}
+                  alt={product.name}
+                  sx={{ objectFit: "contain" }}
+                />
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                    title={product.product_name}
+                  >
+                    {product.product_name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {!discount && (
+                      <span
+                        style={{
+                          color: "red",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {product.price.toLocaleString()} VND
+                      </span>
+                    )}
+                    {discount && (
+                      <>
+                        <span
+                          style={{
+                            color: "red",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {parseFloat(
+                            product.price * (1 - discount.value / 100)
+                          ).toLocaleString()}{" "}
+                          VND
+                        </span>
+                        <span
+                          style={{
+                            textDecoration: "line-through",
+                            marginLeft: 8,
+                            color: "gray",
+                            fontSize: "0.8em",
+                          }}
+                        >
+                          {product.price.toLocaleString()} VND
+                        </span>
+                      </>
+                    )}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to={`/product/${product.product_id}`}
+                    sx={{ mt: 2 }}
+                    fullWidth
+                  >
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
       <Box
         sx={{
@@ -111,12 +175,14 @@ function ProductsBySubcategory() {
           justifyContent: "center",
           alignItems: "center",
           mt: 4,
-        }}>
+        }}
+      >
         <Button
           variant="contained"
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          sx={{ mr: 2 }}>
+          sx={{ mr: 2 }}
+        >
           Previous
         </Button>
         <Typography variant="body1">
@@ -126,7 +192,8 @@ function ProductsBySubcategory() {
           variant="contained"
           onClick={handleNextPage}
           disabled={currentPage === Math.ceil(products.length / itemsPerPage)}
-          sx={{ ml: 2 }}>
+          sx={{ ml: 2 }}
+        >
           Next
         </Button>
       </Box>

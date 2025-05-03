@@ -12,9 +12,11 @@ import {
 import Carousel from "../../components/Carousel/Carousel";
 import { useEffect, useState } from "react";
 import customerService from "../../services/customerService";
+import { useDiscounts } from "../../store/DiscountContext";
 
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const { discounts } = useDiscounts();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -54,14 +56,34 @@ function Home() {
     <>
       <Carousel />
       <Container maxWidth="xl" sx={{ mt: 6 }}>
-        {/* Featured Products */}
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
           Featured Products
         </Typography>
         <Grid container spacing={4} sx={{ mb: 6 }}>
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((product) => {
+            const discount = discounts.find(
+              (d) => d.product_id === product.product_id
+            );
+            return (
             <Grid item key={product.product_id} xs={12} sm={6} md={4}>
-              <Card>
+                <Card sx={{ position: "relative" }}>
+                  {discount && (
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        backgroundColor: "rgba(255, 0, 0, 0.8)",
+                        color: "white",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontWeight: "bold",
+                      }}>
+                      {discount.value}% OFF
+                    </Typography>
+                  )}
                 <CardMedia
                   component="img"
                   height="200"
@@ -92,7 +114,40 @@ function Home() {
                     {product.category_name}
                   </Typography>
                   <Typography variant="h6" color="primary">
-                    {product.price}
+                      {!discount && (
+                        <span
+                          style={{
+                            color: "red",
+                            fontWeight: "bold",
+                          }}>
+                          {product.price.toLocaleString()} VND
+                        </span>
+                      )}
+                      {discount && (
+                        <span
+                          style={{
+                            color: "red",
+                            fontWeight: "bold",
+                          }}>
+                          {parseInt(
+                            product.price * (1 - discount.value / 100)
+                          ).toLocaleString()}{" "}
+                          VND
+                        </span>
+                      )}
+                      {discount && (
+                        <>
+                          <span
+                            style={{
+                              textDecoration: "line-through",
+                              marginLeft: 8,
+                              color: "gray",
+                              fontSize: "0.8em",
+                            }}>
+                            {product.price.toLocaleString()} VND
+                          </span>
+                        </>
+                      )}
                   </Typography>
                   <Button
                     variant="contained"
@@ -105,7 +160,8 @@ function Home() {
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+            );
+          })}
         </Grid>
         {/* Categories */}
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>

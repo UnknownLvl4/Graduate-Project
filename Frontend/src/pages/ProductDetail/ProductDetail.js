@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import * as CusomterService from "../../services/customerService";
 import ProductComments from "../../components/ProductComments/ProductComments";
+import { useDiscounts } from "../../store/DiscountContext"; // Import the discount context
 
 function ProductDetail() {
   const { id: productId } = useParams();
@@ -18,6 +19,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1); // State for quantity
+  const { discounts } = useDiscounts(); // Use the discount context
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -68,13 +70,36 @@ function ProductDetail() {
   if (error) return <Typography color="error">{error}</Typography>;
   if (!product) return <Typography>Product not found</Typography>;
 
+  // Find the discount for the current product
+  const discount = discounts.find((d) => d.product_id === product.product_id);
+
   return (
     <Container>
       <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{ position: "relative" }}>
+            {discount && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  left: 8,
+                  backgroundColor: "rgba(255, 0, 0, 0.8)",
+                  color: "white",
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  fontWeight: "bold",
+                }}>
+                {discount.value}% OFF
+              </Typography>
+            )}
             <img
-              src={product.image || "https://via.placeholder.com/400"}
+              src={
+                product.image ||
+                "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+              }
               alt={product.product_name}
               style={{
                 width: "100%",
@@ -88,20 +113,45 @@ function ProductDetail() {
               {product.product_name}
             </Typography>
             <Typography variant="h5" color="primary" gutterBottom>
-              ${product.price}
+              {!discount && (
+                <span
+                  style={{
+                    color: "red",
+                    fontWeight: "bold",
+                  }}>
+                  {product.price.toLocaleString()} VND
+                </span>
+              )}
+              {discount && (
+                <>
+                  <span
+                    style={{
+                      color: "red",
+                      fontWeight: "bold",
+                    }}>
+                    {parseFloat(
+                      product.price * (1 - discount.value / 100)
+                    ).toLocaleString()}{" "}
+                    VND
+                  </span>
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      marginLeft: 8,
+                      color: "gray",
+                      fontSize: "0.8em",
+                    }}>
+                    {product.price.toLocaleString()} VND
+                  </span>
+                </>
+              )}
             </Typography>
             <Typography variant="body1" paragraph>
               {product.description}
             </Typography>
             <Box sx={{ mt: 2 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Category ID: {product.category_id}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                Product ID: {product.product_id}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                Stock: {product.stock_quantity}
+                Hiện tại còn: {product.stock_quantity} sản phẩm
               </Typography>
             </Box>
             <Box sx={{ mt: 3, display: "flex", alignItems: "center", gap: 2 }}>
