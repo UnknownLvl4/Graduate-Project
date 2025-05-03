@@ -219,7 +219,7 @@ export class ProductService {
           FROM 
             product
           GROUP BY 
-            category_id, sub_category_id
+            category_id
         ) max_prices
         ON p.category_id = max_prices.category_id 
         AND p.price = max_prices.max_price
