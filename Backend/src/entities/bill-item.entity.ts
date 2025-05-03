@@ -13,7 +13,7 @@ export class BillItem {
   product_id: string;
 
   @Column('decimal')
-  pricing: number;
+  price: number;
 
   @Column('int')
   quantity: number;

@@ -15,7 +15,6 @@ import {
   Paper,
   InputBase,
   Grid,
-  Divider,
   List,
   ListItem,
   ListItemText,

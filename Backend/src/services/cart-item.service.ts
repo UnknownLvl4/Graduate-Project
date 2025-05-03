@@ -58,4 +58,9 @@ export class CartItemService {
   delete(cartItemId: string) {
     return this.cartItemRepository.delete(cartItemId);
   }
+
+  deleteByCartId(cartId: string) {
+    return this.cartItemRepository.delete({ cart_id: cartId });
+  }
+
 }

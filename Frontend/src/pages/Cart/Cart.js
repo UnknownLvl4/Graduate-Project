@@ -11,7 +11,6 @@ import {
   FormControlLabel,
   FormControl,
 } from "@mui/material";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import customerService from "../../services/customerService";
 
@@ -62,17 +61,16 @@ function Cart() {
   const handleSubmit = async () => {
     try {
       const billData = {
-        items: cartItems,
-        totalPrice,
-        paymentMethod,
+        user_id: JSON.parse(localStorage.getItem("user")).id,
       };
 
-      const { data: bill } = await axios.post("/api/create-bill", billData); // Replace with your API endpoint
+      const { data: bill } = await customerService.createBill(billData);
 
       if (paymentMethod === "banking") {
         navigate(`/payment/${bill.id}`); // Redirect to payment page
       } else {
         alert("Order placed successfully!");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Error creating bill:", error);

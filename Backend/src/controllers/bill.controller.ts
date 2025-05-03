@@ -30,4 +30,10 @@ export class BillController {
     this.logger.log(`Deleting bill ID: ${billId}`);
     return this.billService.delete(billId);
   }
+
+  @Post('checkout')
+  createBillFromCart(@Body() cart: { user_id: string }) {
+    this.logger.log('Creating a bill from cart');
+    return this.billService.createBillFromCart(cart.user_id);
+  }
 }

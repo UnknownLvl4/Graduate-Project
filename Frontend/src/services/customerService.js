@@ -95,13 +95,15 @@ const queryCartItems = async (userId) => {
 
 const removeFromCart = async (cart_item_id) => {
   try {
-    const response = await axios.delete(`${API_URL}/cart-items/${cart_item_id}`);
+    const response = await axios.delete(
+      `${API_URL}/cart-items/${cart_item_id}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error removing item from cart:", error);
     throw error;
   }
-}
+};
 
 const addToCart = async (cartItem) => {
   try {
@@ -109,6 +111,16 @@ const addToCart = async (cartItem) => {
     return response.data;
   } catch (error) {
     console.error("Error adding item to cart:", error);
+    throw error;
+  }
+};
+
+const createBill = async (billData) => {
+  try {
+    const response = await axios.post(`${API_URL}/bills/checkout`, billData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating bill:", error);
     throw error;
   }
 };
@@ -125,6 +137,7 @@ const customerService = {
   queryCartItems,
   removeFromCart,
   addToCart,
+  createBill,
 };
 
 export default customerService;
