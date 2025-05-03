@@ -6,6 +6,7 @@ import { CartService } from './cart.service';
 import { BillItem } from 'src/entities/bill-item.entity';
 import { CartItemService } from './cart-item.service';
 import { DiscountService } from './discount.service';
+import { ProductService } from './product.service';
 
 @Injectable()
 export class BillService {
@@ -17,6 +18,7 @@ export class BillService {
     private readonly cartService: CartService,
     private readonly cartItemService: CartItemService,
     private readonly discountService: DiscountService,
+    private readonly productService: ProductService,
   ) {}
 
   async findAll(): Promise<Bill[]> {
@@ -87,6 +89,16 @@ export class BillService {
         id: crypto.randomUUID(),
       })),
     );
+
+    // Update stock in the product table
+    for (const item of cart) {
+      const product = await this.productService.findById(item.product_id);
+      if (!product) {
+        throw new Error(`Product with ID ${item.product_id} not found`);
+      }
+      product.stock_quantity -= item.quantity;
+      await this.productService.update(product.product_id, product);
+    }
 
     // clear the Cart after creating the Bill
     await this.cartItemService.deleteByCartId(cart[0].cart_id);

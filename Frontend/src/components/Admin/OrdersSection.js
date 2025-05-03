@@ -25,6 +25,7 @@ const OrdersSection = ({ items, fetchData }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const fetchUsers = async () => {
     try {
@@ -80,8 +81,27 @@ const OrdersSection = ({ items, fetchData }) => {
     }));
   };
 
+  // Filter orders based on the selected date
+  const filteredItems = selectedDate
+    ? items.filter(
+        (item) =>
+          new Date(item.created_at).toLocaleDateString() ===
+          new Date(selectedDate).toLocaleDateString()
+      )
+    : items;
+
   return (
     <>
+      {/* Date Picker for filtering */}
+      <div style={{ marginBottom: "16px" }}>
+        <TextField
+          type="date"
+          label="Filter by Date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
+      </div>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -95,7 +115,7 @@ const OrdersSection = ({ items, fetchData }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>
@@ -106,7 +126,9 @@ const OrdersSection = ({ items, fetchData }) => {
                       : "Unknown User";
                   })()}
                 </TableCell>
-                <TableCell>{parseInt(item.total).toLocaleString()} VND</TableCell>
+                <TableCell>
+                  {parseInt(item.total).toLocaleString()} VND
+                </TableCell>
                 <TableCell>
                   {(() => {
                     switch (item.status) {
@@ -140,7 +162,11 @@ const OrdersSection = ({ items, fetchData }) => {
       </TableContainer>
 
       {/* Order Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth>
         <DialogTitle>Edit Order</DialogTitle>
         <DialogContent>
           <TextField
@@ -152,8 +178,7 @@ const OrdersSection = ({ items, fetchData }) => {
             fullWidth
             required
             error={!!error}
-            helperText={error}
-          >
+            helperText={error}>
             <MenuItem value="Pending">Chờ xác nhận</MenuItem>
             <MenuItem value="Processing">Đang xử lý</MenuItem>
             <MenuItem value="Shipped">Đang vận chuyển</MenuItem>
@@ -165,7 +190,10 @@ const OrdersSection = ({ items, fetchData }) => {
           <Button onClick={handleCloseDialog} disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSaveOrder} variant="contained" disabled={loading}>
+          <Button
+            onClick={handleSaveOrder}
+            variant="contained"
+            disabled={loading}>
             {loading ? "Saving..." : "Save"}
           </Button>
         </DialogActions>

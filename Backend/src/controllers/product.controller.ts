@@ -62,14 +62,13 @@ export class ProductController {
   @Put(':categoryId/:productId')
   @UseInterceptors(FileInterceptor('image'))
   async update(
-    @Param('categoryId') categoryId: string,
     @Param('productId') productId: string,
     @Body() updateProductDto: UpdateProductDto,
     @UploadedFile() imageFile: Express.Multer.File
   ) {
     try {
-      this.logger.log(`Updating product - Category ID: ${categoryId}, Product ID: ${productId}`);
-      const result = await this.productService.update(categoryId, productId, updateProductDto, imageFile);
+      this.logger.log(`Updating product - Product ID: ${productId}`);
+      const result = await this.productService.update(productId, updateProductDto, imageFile);
       this.logger.log(`Updated product: ${result.product_name}`);
       return result;
     } catch (error) {

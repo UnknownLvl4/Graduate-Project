@@ -7,6 +7,7 @@ import { CartModule } from './cart.module';
 import { BillItem } from 'src/entities/bill-item.entity';
 import { CartItemModule } from './cart-item.module';
 import { DiscountModule } from './discount.module';
+import { ProductModule } from './product.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DiscountModule } from './discount.module';
     CartModule,
     CartItemModule,
     DiscountModule,
+    ProductModule
   ],
   controllers: [BillController],
   providers: [BillService],

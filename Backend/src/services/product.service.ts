@@ -68,6 +68,18 @@ export class ProductService {
     return product;
   }
 
+  async findById(product_id: string) {
+    this.logger.debug(`Finding product with product_id: ${product_id}`);
+    const product = await this.productRepository.findOne({ 
+      where: { product_id } 
+    });
+    if (!product) {
+      this.logger.warn(`Product not found with id ${product_id}`);
+      throw new NotFoundException(`Product with id ${product_id} not found`);
+    }
+    return product;
+  }
+
   async create(createProductDto: CreateProductDto, imageFile?: Express.Multer.File) {
     this.logger.debug('Creating new product:', createProductDto);
     try {
@@ -117,14 +129,14 @@ export class ProductService {
     }
   }
 
-  async update(category_id: string, product_id: string, updateProductDto: UpdateProductDto, imageFile?: Express.Multer.File) {
-    this.logger.debug(`Updating product with category_id: ${category_id} and product_id: ${product_id}`, updateProductDto);
+  async update(product_id: string, updateProductDto: UpdateProductDto, imageFile?: Express.Multer.File) {
+    this.logger.debug(`Updating product with product_id: ${product_id}`, updateProductDto);
     try {
-      const product = await this.findOne(category_id, product_id);
+      const product = await this.findById(product_id);
       
       // Handle image upload if provided
       if (imageFile) {
-        const fileName = `${category_id}${product_id}${path.extname(imageFile.originalname)}`;
+        const fileName = `${product.category_id}${product_id}${path.extname(imageFile.originalname)}`;
         const filePath = path.join(this.uploadsPath, fileName);
         
         // Delete old image if exists
