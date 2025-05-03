@@ -568,7 +568,7 @@ function Dashboard() {
               {selectedItem?.image && (
                 <Box sx={{ mt: 2 }}>
                   <img
-                    src={URL.createObjectURL(selectedItem.image)}
+                    src={selectedItem.image || ""}
                     alt="Preview"
                     style={{ maxWidth: "100%", maxHeight: "200px" }}
                   />
@@ -789,7 +789,7 @@ function Dashboard() {
                 {selectedItem?.image && (
                   <Box sx={{ mt: 2 }}>
                     <img
-                      src={URL.createObjectURL(selectedItem.image) || ""}
+                      src={selectedItem.image || ""}
                       alt="Preview"
                       style={{ maxWidth: "100%", maxHeight: "200px" }}
                     />
