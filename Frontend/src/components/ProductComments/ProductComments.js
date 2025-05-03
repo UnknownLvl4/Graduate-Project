@@ -18,7 +18,7 @@ function ProductComments({ productId }) {
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchComments = async () => {
+  const fetchComments = React.useCallback(async () => {
     try {
       const response = await CustomerService.default.getProductComments(
         productId
@@ -29,11 +29,11 @@ function ProductComments({ productId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
 
   useEffect(() => {
     if (productId) fetchComments();
-  }, [productId]);
+  }, [productId, fetchComments]);
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;

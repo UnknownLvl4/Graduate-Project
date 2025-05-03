@@ -65,10 +65,11 @@ function Cart() {
         user_id: JSON.parse(localStorage.getItem("user")).id,
       };
 
-      const { data: bill } = await customerService.createBill(billData);
+      const bill = await customerService.createBill(billData);
 
       if (paymentMethod === "banking") {
-        navigate(`/payment/${bill.id}`);
+        alert("Order placed successfully!");
+        window.location.href = "/payment/" + bill.id;
       } else {
         alert("Order placed successfully!");
         window.location.href = "/";
