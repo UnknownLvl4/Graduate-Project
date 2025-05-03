@@ -79,7 +79,8 @@ function Dashboard() {
         case 0:
           const response = await adminService.getProducts(
             page + 1,
-            rowsPerPage
+            rowsPerPage,
+            searchQuery.trim().toLowerCase()
           );
           data = response.data.items;
           setTotalItems(response.data.meta.total);
@@ -102,7 +103,7 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [tab, page, rowsPerPage]);
+  }, [tab, page, rowsPerPage, searchQuery]);
 
   useEffect(() => {
     fetchData();

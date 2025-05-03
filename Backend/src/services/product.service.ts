@@ -21,18 +21,18 @@ export class ProductService {
     }
   }
 
-  async findAll(page = 1, limit = 10, category?: string) {
-    this.logger.debug(`Finding all products. Page: ${page}, Limit: ${limit}, Category: ${category}`);
+  async findAll(page = 1, limit = 10, query?: string) {
+    this.logger.debug(`Finding all products. Page: ${page}, Limit: ${limit}, Query: ${query}`);
     try {
       const queryBuilder = this.productRepository.createQueryBuilder('product');
 
-      if (category) {
-        queryBuilder.where('product.category_id = :category', { category });
+      if (query) {
+        queryBuilder.where('LOWER(product.product_name) LIKE LOWER(:name)', { name: `%${query}%` });
+        queryBuilder.orWhere('LOWER(product.product_id) LIKE LOWER(:id)', { id: `%${query}%` });
       }
 
       queryBuilder
-        .orderBy('product.category_id')
-        .addOrderBy('product.product_id');
+        .orderBy('product.product_id');
 
       const [items, total] = await queryBuilder
         .skip((page - 1) * limit)

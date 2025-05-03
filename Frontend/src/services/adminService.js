@@ -3,9 +3,9 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 // Products
-export const getProducts = async (page = 1, limit = 10, category = '') => {
+export const getProducts = async (page = 1, limit = 10, query = '') => {
   return axios.get(`${API_URL}/products`, {
-    params: { page, limit, category }
+    params: { page, limit, query }
   });
 };
 

@@ -13,11 +13,11 @@ export class ProductController {
   async findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-    @Query('category') category?: string,
+    @Query('query') query?: string,
   ) {
     try {
-      this.logger.log(`Finding all products - Page: ${page}, Limit: ${limit}, Category: ${category}`);
-      const result = await this.productService.findAll(page, limit, category);
+      this.logger.log(`Finding all products - Page: ${page}, Limit: ${limit}, Query: ${query}`);
+      const result = await this.productService.findAll(page, limit, query);
       this.logger.log(`Found ${result.items.length} products`);
       return result;
     } catch (error) {
