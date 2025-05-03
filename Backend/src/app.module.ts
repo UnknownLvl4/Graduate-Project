@@ -20,6 +20,8 @@ import { CartModule } from './modules/cart.module';
 import { CartItemModule } from './modules/cart-item.module';
 import { Cart } from './entities/cart.entity';
 import { CartItem } from './entities/cart-item.entity';
+import { BillModule } from './modules/bill.module';
+import { BillItemModule } from './modules/bill-item.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { CartItem } from './entities/cart-item.entity';
     SubCategoryModule,
     CartModule,
     CartItemModule,
+    BillModule,
+    BillItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
