@@ -64,10 +64,10 @@ export const deleteCategory = (id) => axios.delete(`${API_URL}/categories/${id}`
 
 // Orders
 export const getOrders = async () => {
-  return axios.get(`${API_URL}/orders`);
+  return axios.get(`${API_URL}/bills`);
 };
 
-export const updateOrder = (id, data) => axios.put(`${API_URL}/orders/${id}`, data);
+export const updateOrder = (id, data) => axios.put(`${API_URL}/bills/${id}`, data);
 
 // Users
 export const getUsers = async () => {

@@ -18,7 +18,16 @@ export class BillService {
   ) {}
 
   async findAll(): Promise<Bill[]> {
-    return await this.billRepository.find();
+    // Fetch all bills from the database
+    const bills: any[] = await this.billRepository.find();
+    // Loop through each bill and fetch the items associated with it
+    for (const bill of bills) {
+      const items = await this.billItemsRepository.find({
+        where: { bill_id: bill.id },
+      });
+      bill.total = items.reduce((acc, item) => acc + item.price, 0);
+    }
+    return bills;
   }
 
   async findByUser(userId: string): Promise<Bill[]> {
@@ -28,6 +37,15 @@ export class BillService {
   async create(billData: { user_id: string }): Promise<Bill> {
     const newBill = this.billRepository.create(billData);
     return await this.billRepository.save(newBill);
+  }
+
+  async update(billId: string, billData: { status: string }): Promise<Bill> {
+    await this.billRepository.update(billId, billData);
+    const bill = await this.billRepository.findOne({ where: { id: billId } });
+    if (!bill) {
+      throw new Error(`Bill with ID ${billId} not found`);
+    }
+    return bill;
   }
 
   async delete(billId: string): Promise<{ message: string }> {

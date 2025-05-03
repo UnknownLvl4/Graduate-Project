@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Delete, Body, Param, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Logger,
+  Put,
+} from '@nestjs/common';
 import { BillService } from '../services/bill.service';
 
 @Controller('bills')
@@ -23,6 +32,12 @@ export class BillController {
   create(@Body() bill: { user_id: string }) {
     this.logger.log('Creating a new bill');
     return this.billService.create(bill);
+  }
+
+  @Put(':billId')
+  update(@Param('billId') billId: string, @Body() bill: { status: string }) {
+    this.logger.log(`Updating bill ID: ${billId}`);
+    return this.billService.update(billId, bill);
   }
 
   @Delete(':billId')

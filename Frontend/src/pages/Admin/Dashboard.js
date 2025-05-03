@@ -34,6 +34,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import * as adminService from "../../services/adminService";
+import OrdersSection from "../../components/Admin/OrdersSection";
 
 // TabPanel component for different sections
 function TabPanel({ children, value, index, ...other }) {
@@ -604,36 +605,7 @@ function Dashboard() {
   );
 
   const renderOrdersSection = () => (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Order ID</TableCell>
-            <TableCell>Customer</TableCell>
-            <TableCell>Total</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
-              <TableCell>{item.customer}</TableCell>
-              <TableCell>${item.total}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
-              <TableCell>
-                <IconButton onClick={() => handleOpenDialog(item)}>
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <OrdersSection items={items} fetchData={fetchData} />
   );
 
   const renderUsersSection = () => {
@@ -824,22 +796,6 @@ function Dashboard() {
                 )}
               </Box>
             </>
-          )}
-          {dialogType === "order" && (
-            <TextField
-              name="status"
-              label="Status"
-              select
-              value={selectedItem?.status || ""}
-              onChange={handleInputChange}
-              fullWidth
-              required>
-              <MenuItem value="Pending">Pending</MenuItem>
-              <MenuItem value="Processing">Processing</MenuItem>
-              <MenuItem value="Shipped">Shipped</MenuItem>
-              <MenuItem value="Delivered">Delivered</MenuItem>
-              <MenuItem value="Cancelled">Cancelled</MenuItem>
-            </TextField>
           )}
           {dialogType === "user" && (
             <>

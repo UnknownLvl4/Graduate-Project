@@ -8,6 +8,9 @@ export class Bill {
   @Column()
   user_id: string;
 
+  @Column()
+  status: string;
+
   @CreateDateColumn()
   created_at: Date;
 }
