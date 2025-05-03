@@ -8,5 +8,6 @@ import { DiscountController } from '../controllers/discount.controller';
   imports: [TypeOrmModule.forFeature([Discount])],
   controllers: [DiscountController],
   providers: [DiscountService],
+  exports: [DiscountService],
 })
 export class DiscountModule {}

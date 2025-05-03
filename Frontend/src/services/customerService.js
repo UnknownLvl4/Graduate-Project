@@ -125,6 +125,16 @@ const createBill = async (billData) => {
   }
 };
 
+const getDiscounts = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/discounts`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching discounts:", error);
+    throw error;
+  }
+};
+
 const customerService = {
   queryProducts,
   queryMostExpensiveProductByCategory,
@@ -138,6 +148,7 @@ const customerService = {
   removeFromCart,
   addToCart,
   createBill,
+  getDiscounts,
 };
 
 export default customerService;

@@ -5,6 +5,7 @@ import { Bill } from '../entities/bill.entity';
 import { CartService } from './cart.service';
 import { BillItem } from 'src/entities/bill-item.entity';
 import { CartItemService } from './cart-item.service';
+import { DiscountService } from './discount.service';
 
 @Injectable()
 export class BillService {
@@ -15,6 +16,7 @@ export class BillService {
     private readonly billItemsRepository: Repository<BillItem>,
     private readonly cartService: CartService,
     private readonly cartItemService: CartItemService,
+    private readonly discountService: DiscountService,
   ) {}
 
   async findAll(): Promise<Bill[]> {
@@ -67,10 +69,20 @@ export class BillService {
     });
     await this.billRepository.save(newBill);
 
+    // Get all discounts from DiscountService (not implemented here)
+    const discounts = await this.discountService.findAll();
+
     // Loop cart array and save each item to the bill items table
     this.billItemsRepository.save(
       cart.map((item) => ({
         ...item,
+        price:
+          item.quantity *
+          ((item.price *
+            (100 -
+              (discounts.find((d) => d.product_id === item.product_id)?.value ?? 0) ||
+              0)) /
+            100),
         bill_id: newBill.id,
         id: crypto.randomUUID(),
       })),

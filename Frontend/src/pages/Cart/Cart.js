@@ -26,16 +26,17 @@ function Cart() {
       try {
         const userId = JSON.parse(localStorage.getItem("user")).id;
         const items = await customerService.queryCartItems(userId);
-        const discounts = [];
-        // const { data: discounts } = await axios.get("/api/discounts");
+        const discounts = await customerService.getDiscounts();
 
         console.log("Fetched items:", items);
         console.log("Fetched discounts:", discounts);
 
         const updatedItems = items.map((item) => {
           const discount =
-            discounts.find((d) => d.productId === item.id)?.amount || 0;
-          const discountedPrice = item.price - discount;
+            discounts.find((d) => d.product_id === item.product_id)?.value || 0;
+          const discountedPrice = parseInt(
+            (item.price * (100 - discount)) / 100
+          );
           return { ...item, discountedPrice };
         });
 
@@ -67,7 +68,7 @@ function Cart() {
       const { data: bill } = await customerService.createBill(billData);
 
       if (paymentMethod === "banking") {
-        navigate(`/payment/${bill.id}`); // Redirect to payment page
+        navigate(`/payment/${bill.id}`);
       } else {
         alert("Order placed successfully!");
         window.location.href = "/";
@@ -115,13 +116,16 @@ function Cart() {
               secondary={
                 <>
                   <Typography variant="body2">
-                    Giá gốc: {item.price.toLocaleString()} VND
+                    Giá gốc (1 sp): {item.price.toLocaleString()} VND
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                     Thành tiền:{" "}
                     {item.discountedPrice !== item.price
-                      ? `${item.discountedPrice.toLocaleString()} VND (Giảm giá: ${(
-                          item.price - item.discountedPrice
+                      ? `${(
+                          item.quantity * item.discountedPrice
+                        ).toLocaleString()} VND (Giảm giá: ${(
+                          item.quantity *
+                          (item.price - item.discountedPrice)
                         ).toLocaleString()} VND)`
                       : `${item.price.toLocaleString()} VND`}
                   </Typography>
@@ -153,7 +157,7 @@ function Cart() {
           color="primary"
           sx={{ mt: 2 }}
           onClick={handleSubmit}>
-          Submit Order
+          Thanh toán
         </Button>
       </FormControl>
     </Container>
