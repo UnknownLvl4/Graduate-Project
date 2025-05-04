@@ -29,7 +29,6 @@ import {
 import {
   Add as AddIcon,
   Edit as EditIcon,
-  Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -60,8 +59,6 @@ function Dashboard() {
   const [dialogType, setDialogType] = useState("sản phẩm");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
@@ -230,40 +227,6 @@ function Dashboard() {
       console.error("Error saving product:", err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDeleteClick = (item) => {
-    setItemToDelete(item);
-    setDeleteConfirmOpen(true);
-  };
-
-  const handleDelete = async () => {
-    if (!itemToDelete) return;
-
-    setLoading(true);
-    setError(null);
-    try {
-      switch (dialogType) {
-        case "sản phẩm":
-          await adminService.deleteProduct(
-            itemToDelete.category_id,
-            itemToDelete.product_id
-          );
-          break;
-        case "user":
-          await adminService.deleteUser(itemToDelete.id);
-          break;
-        default:
-          throw new Error("Invalid operation");
-      }
-      await fetchData();
-    } catch (err) {
-      setError(err.message || "Failed to delete");
-    } finally {
-      setLoading(false);
-      setDeleteConfirmOpen(false);
-      setItemToDelete(null);
     }
   };
 
@@ -442,12 +405,6 @@ function Dashboard() {
                         title="Chinh sửa">
                         <EditIcon />
                       </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteClick(item)}
-                        disabled={loading}
-                        title="Xóa">
-                        <DeleteIcon />
-                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -593,21 +550,6 @@ function Dashboard() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog
-        open={deleteConfirmOpen}
-        onClose={() => setDeleteConfirmOpen(false)}>
-        <DialogTitle>Xác nhận xóa sản phẩm</DialogTitle>
-        <DialogContent>
-          Bạn có chắc chắn muốn xóa sản phẩm này không?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteConfirmOpen(false)}>Hủy</Button>
-          <Button onClick={handleDelete} color="error">
-            Xóa
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 
@@ -691,7 +633,7 @@ function Dashboard() {
       maxWidth="sm"
       fullWidth>
       <DialogTitle>
-        {(selectedItem?.product_id || selectedItem?.id)
+        {selectedItem?.product_id || selectedItem?.id
           ? `Chỉnh sửa ${dialogType}`
           : `Thêm ${dialogType}`}
       </DialogTitle>
@@ -881,30 +823,6 @@ function Dashboard() {
     </Dialog>
   );
 
-  // Delete confirmation dialog
-  const renderDeleteDialog = () => (
-    <Dialog
-      open={deleteConfirmOpen}
-      onClose={() => setDeleteConfirmOpen(false)}>
-      <DialogTitle>Xác nhận xóa</DialogTitle>
-      <DialogContent>
-        Bạn có chắc chắn muốn xóa sản phẩm này không?
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setDeleteConfirmOpen(false)} disabled={loading}>
-          Hủy
-        </Button>
-        <Button
-          onClick={handleDelete}
-          color="error"
-          variant="contained"
-          disabled={loading}>
-          {loading ? "Đang xóa..." : "Xóa"}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-
   const renderDiscountSection = () => (
     <DiscountSection items={items} fetchData={fetchData} />
   );
@@ -961,7 +879,6 @@ function Dashboard() {
 
       {/* Modals */}
       {renderDialog()}
-      {renderDeleteDialog()}
     </Container>
   );
 }

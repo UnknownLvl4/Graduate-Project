@@ -54,11 +54,4 @@ export class ReviewService {
     Object.assign(review, updateReviewDto);
     return this.reviewRepository.save(review);
   }
-
-  async delete(reviewId: string): Promise<void> {
-    const result = await this.reviewRepository.delete(reviewId);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Review with ID ${reviewId} not found`);
-    }
-  }
 }

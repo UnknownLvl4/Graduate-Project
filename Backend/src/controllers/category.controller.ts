@@ -74,18 +74,4 @@ export class CategoryController {
       );
     }
   }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    try {
-      this.logger.log(`Deleting category with ID: ${id}`);
-      return await this.categoryService.delete(id);
-    } catch (error) {
-      this.logger.error(`Error deleting category: ${error.message}`, error.stack);
-      throw new HttpException(
-        'Error deleting category',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
 }

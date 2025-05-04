@@ -25,8 +25,4 @@ export class SubCategoryService {
   update(id: string, subCategory: Partial<SubCategory>) {
     return this.subCategoryRepository.update(id, subCategory);
   }
-
-  delete(id: string) {
-    return this.subCategoryRepository.delete(id);
-  }
 }

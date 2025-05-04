@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, UseInterceptors, UploadedFile, ParseIntPipe, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Query, UseInterceptors, UploadedFile, ParseIntPipe, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto, UpdateProductDto } from '../dto/product.dto';
@@ -74,35 +74,6 @@ export class ProductController {
     } catch (error) {
       this.logger.error(`Error updating product: ${error.message}`, error.stack);
       throw new HttpException('Error updating product', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @Delete(':categoryId/:productId')
-  async remove(
-    @Param('categoryId') categoryId: string,
-    @Param('productId') productId: string,
-  ) {
-    try {
-      this.logger.log(`Removing product - Category ID: ${categoryId}, Product ID: ${productId}`);
-      const result = await this.productService.remove(categoryId, productId);
-      this.logger.log(`Removed product successfully`);
-      return result;
-    } catch (error) {
-      this.logger.error(`Error removing product: ${error.message}`, error.stack);
-      throw new HttpException('Error removing product', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  @Delete()
-  async bulkDelete(@Body() ids: Array<{category_id: string, product_id: string}>) {
-    try {
-      this.logger.log(`Bulk deleting products`);
-      const result = await this.productService.bulkDelete(ids);
-      this.logger.log(`Bulk delete completed successfully`);
-      return result;
-    } catch (error) {
-      this.logger.error(`Error bulk deleting products: ${error.message}`, error.stack);
-      throw new HttpException('Error bulk deleting products', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

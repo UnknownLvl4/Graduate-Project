@@ -48,19 +48,10 @@ export const updateProduct = async (categoryId, productId, productData) => {
   });
 };
 
-export const deleteProduct = async (categoryId, productId) => {
-  return axios.delete(`${API_URL}/products/${categoryId}/${productId}`);
-};
-
-export const bulkDeleteProducts = async (ids) => {
-  return axios.delete(`${API_URL}/products`, { data: ids });
-};
-
 // Categories
 export const getCategories = () => axios.get(`${API_URL}/categories`);
 export const createCategory = (data) => axios.post(`${API_URL}/categories`, data);
 export const updateCategory = (id, data) => axios.put(`${API_URL}/categories/${id}`, data);
-export const deleteCategory = (id) => axios.delete(`${API_URL}/categories/${id}`);
 
 // Orders
 export const getOrders = async () => {

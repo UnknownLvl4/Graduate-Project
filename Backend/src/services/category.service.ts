@@ -33,9 +33,4 @@ export class CategoryService {
     Object.assign(category, updateCategoryDto);
     return await this.categoryRepository.save(category);
   }
-
-  async delete(id: string): Promise<void> {
-    const category = await this.findOne(id);
-    await this.categoryRepository.remove(category);
-  }
 }

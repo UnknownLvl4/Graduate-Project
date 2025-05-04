@@ -110,7 +110,7 @@ function ProductDetail() {
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h4" gutterBottom>
-              {product.product_name}
+              {product.product_name.replace(/\//g, "/ ")}
             </Typography>
             <Typography variant="h5" color="primary" gutterBottom>
               {!discount && (

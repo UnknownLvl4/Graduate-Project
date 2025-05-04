@@ -183,10 +183,10 @@ export class ProductService {
     }
   }
 
-  async remove(category_id: string, product_id: string) {
-    this.logger.debug(`Removing product with category_id: ${category_id} and product_id: ${product_id}`);
+  async remove(product_id: string) {
+    this.logger.debug(`Removing product with product_id: ${product_id}`);
     try {
-      const product = await this.findOne(category_id, product_id);
+      const product = await this.findById(product_id);
 
       // Delete image file if exists
       if (product.image) {
@@ -198,22 +198,9 @@ export class ProductService {
 
       await this.productRepository.remove(product);
       this.logger.debug('Product removed successfully');
-      return { category_id, product_id };
+      return { product_id };
     } catch (error) {
       this.logger.error('Error removing product:', error);
-      throw error;
-    }
-  }
-
-  async bulkDelete(ids: Array<{category_id: string, product_id: string}>) {
-    this.logger.debug('Bulk deleting products:', ids);
-    try {
-      for (const id of ids) {
-        await this.remove(id.category_id, id.product_id);
-      }
-      return { ids };
-    } catch (error) {
-      this.logger.error('Error bulk deleting products:', error);
       throw error;
     }
   }

@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Put,
-  Delete,
   HttpException,
   HttpStatus,
   Logger,
@@ -70,20 +69,6 @@ export class SubCategoryController {
       this.logger.error(`Error updating sub-category: ${error.message}`, error.stack);
       throw new HttpException(
         'Error updating sub-category',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    try {
-      this.logger.log(`Deleting sub-category with ID: ${id}`);
-      return await this.subCategoryService.delete(id);
-    } catch (error) {
-      this.logger.error(`Error deleting sub-category: ${error.message}`, error.stack);
-      throw new HttpException(
-        'Error deleting sub-category',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

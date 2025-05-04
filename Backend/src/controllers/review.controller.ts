@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Body,
   Param,
   Logger,
@@ -65,21 +64,6 @@ export class ReviewController {
       this.logger.error(`Error updating review: ${error.message}`, error.stack);
       throw new HttpException(
         'Error updating review',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @Delete(':reviewId')
-  async delete(@Param('reviewId') reviewId: string) {
-    try {
-      this.logger.log(`Deleting review ID: ${reviewId}`);
-      await this.reviewService.delete(reviewId);
-      return { message: 'Review deleted successfully' };
-    } catch (error) {
-      this.logger.error(`Error deleting review: ${error.message}`, error.stack);
-      throw new HttpException(
-        'Error deleting review',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
