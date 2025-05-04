@@ -157,7 +157,15 @@ function Header() {
               fontWeight: 700,
               display: isSearchOpen ? { xs: "none", md: "block" } : "block",
             }}>
-            E-Commerce
+            <img
+              src="/logo.png"
+              alt="Logo"
+              style={{
+                maxHeight: "64px", // Adjust the height to fit the header
+                objectFit: "contain", // Ensure the image scales properly
+                marginBottom: "-9px", // Optional: Add some space below the image
+              }}
+            />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -249,7 +257,7 @@ function Header() {
             {isSearchOpen && (
               <>
                 <InputBase
-                  placeholder="Search products..."
+                  placeholder="Tìm kiếm sản phẩm..."
                   value={searchQuery}
                   onChange={handleSearch}
                   sx={{
@@ -315,20 +323,20 @@ function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}>
                 {isLoggedIn ? (
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                 ) : (
                   <>
                     <MenuItem
                       component={RouterLink}
                       to="/login"
                       onClick={handleMenuClose}>
-                      Login
+                      Đăng nhập
                     </MenuItem>
                     <MenuItem
                       component={RouterLink}
                       to="/register"
                       onClick={handleMenuClose}>
-                      Register
+                      Đăng ký
                     </MenuItem>
                   </>
                 )}

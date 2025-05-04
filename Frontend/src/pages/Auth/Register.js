@@ -124,14 +124,14 @@ function Register() {
       <Box sx={{ mt: 8, mb: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h4" component="h1" align="center" gutterBottom>
-            Create Account
+            Tạo tài khoản
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="First Name"
+                  label="Tên"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
@@ -143,7 +143,7 @@ function Register() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Last Name"
+                  label="Họ và tên đệm"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
@@ -168,7 +168,7 @@ function Register() {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Password"
+                  label="Mật khẩu"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
@@ -196,7 +196,7 @@ function Register() {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Confirm Password"
+                  label="Xác nhận mật khẩu"
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
@@ -226,7 +226,7 @@ function Register() {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Phone Number"
+                  label="Số điện thoại"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
@@ -238,7 +238,7 @@ function Register() {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Address"
+                  label="Địa chỉ"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
@@ -253,14 +253,14 @@ function Register() {
               variant="contained"
               size="large"
               sx={{ mt: 3, mb: 2 }}>
-              Register
+              Đăng ký
             </Button>
           </form>
           <Box sx={{ textAlign: "center", mt: 2 }}>
             <Typography variant="body2">
-              Already have an account?{" "}
+              Đã có tài khoản?{" "}
               <Link component={RouterLink} to="/login">
-                Sign in
+                Đăng nhập
               </Link>
             </Typography>
           </Box>

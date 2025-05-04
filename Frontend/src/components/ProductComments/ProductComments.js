@@ -57,11 +57,18 @@ function ProductComments({ productId }) {
   };
 
   if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">{error}</Typography>;
+  if (error || !JSON.parse(localStorage.getItem("user"))?.id)
+    return (
+      <Typography color="error">
+        Xin hãy đăng nhập để có thể xem comment
+      </Typography>
+    );
 
   return (
     <>
-      {comments.length === 0 && <Typography>No comments available</Typography>}
+      {comments.length === 0 && (
+        <Typography>Hiện không có nhận xét nào</Typography>
+      )}
       <List>
         {comments.map((comment, index) => (
           <React.Fragment key={comment.id}>
@@ -100,7 +107,7 @@ function ProductComments({ productId }) {
       </List>
       <div style={{ marginTop: "1rem" }}>
         <TextField
-          label="Add a comment"
+          label="Nhập nhận xét của bạn"
           variant="outlined"
           fullWidth
           value={newComment}
@@ -113,7 +120,7 @@ function ProductComments({ productId }) {
           onClick={handleCommentSubmit}
           style={{ marginTop: "0.5rem" }}
           disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit"}
+          {submitting ? "Đang gửi nhận xét..." : "Gửi"}
         </Button>
       </div>
     </>

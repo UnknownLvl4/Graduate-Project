@@ -68,7 +68,7 @@ function ProductDetail() {
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
-  if (!product) return <Typography>Product not found</Typography>;
+  if (!product) return <Typography>Không tìm thấy sản phẩm</Typography>;
 
   // Find the discount for the current product
   const discount = discounts.find((d) => d.product_id === product.product_id);
@@ -157,7 +157,7 @@ function ProductDetail() {
             <Box sx={{ mt: 3, display: "flex", alignItems: "center", gap: 2 }}>
               <TextField
                 type="number"
-                label="Quantity"
+                label="Số lượng"
                 variant="outlined"
                 size="small"
                 value={quantity}
@@ -174,7 +174,7 @@ function ProductDetail() {
                 size="large"
                 disabled={product.stock_quantity === 0}
                 onClick={handleAddToCart}>
-                {product.stock_quantity === 0 ? "Out of Stock" : "Add to Cart"}
+                {product.stock_quantity === 0 ? "Out of Stock" : "Thêm vào giỏ hàng"}
               </Button>
             </Box>
           </Grid>
@@ -182,7 +182,7 @@ function ProductDetail() {
       </Paper>
       <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
         <Typography variant="h5" gutterBottom>
-          Comments
+          Nhận xét
         </Typography>
         <ProductComments productId={product.product_id} />
       </Paper>

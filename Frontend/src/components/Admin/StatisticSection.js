@@ -34,7 +34,7 @@ const StatisticSection = () => {
         const response = await adminService.getOrders(); // Fetch orders from AdminService
         setOrders(response.data || []);
       } catch (err) {
-        setError("Failed to fetch orders");
+        setError("Không thể tìm được đơn hàng");
         console.error(err);
       } finally {
         setLoading(false);
@@ -46,7 +46,7 @@ const StatisticSection = () => {
 
   const filterOrdersByDateRange = () => {
     if (!startDate || !endDate) {
-      setError("Please select both start and end dates.");
+      setError("Vui lòng chọn ngày bắt đầu và ngày kết thúc.");
       return;
     }
 
@@ -55,7 +55,7 @@ const StatisticSection = () => {
     end.setDate(end.getDate() + 1);
 
     if (start > end) {
-      setError("Start date cannot be after end date.");
+      setError("Ngày bắt đầu không thể sau ngày kết thúc.");
       return;
     }
 
@@ -80,7 +80,7 @@ const StatisticSection = () => {
       labels: Object.keys(filteredData),
       datasets: [
         {
-          label: "Revenue (VND)",
+          label: "Doanh thu (VND)",
           data: Object.values(filteredData),
           backgroundColor: "#3f51b5",
         },
@@ -91,7 +91,7 @@ const StatisticSection = () => {
   return (
     <Paper sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
-        Statistics
+        Thống kê doanh thu
       </Typography>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
@@ -103,7 +103,7 @@ const StatisticSection = () => {
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <TextField
               type="date"
-              label="Start Date"
+              label="Ngày bắt đầu"
               InputLabelProps={{ shrink: true }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
@@ -111,14 +111,14 @@ const StatisticSection = () => {
             />
             <TextField
               type="date"
-              label="End Date"
+              label="Ngày kết thúc"
               InputLabelProps={{ shrink: true }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               fullWidth
             />
             <Button variant="contained" onClick={filterOrdersByDateRange}>
-              Filter
+              Lọc
             </Button>
           </Box>
           {Object.keys(filteredData).length > 0 ? (
@@ -133,7 +133,7 @@ const StatisticSection = () => {
               />
             </Box>
           ) : (
-            <Typography>No data available for the selected range.</Typography>
+            <Typography>Không có dữ liệu nào cho phạm vi đã chọn.</Typography>
           )}
         </Box>
       )}

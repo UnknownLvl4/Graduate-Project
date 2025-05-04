@@ -5,46 +5,49 @@ const Contact = () => {
   return (
     <Box sx={{ padding: "2rem" }}>
       <Typography variant="h4" gutterBottom>
-        Contact Us
+        Liên hệ với cửa hàng
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Welcome to our tech store! We specialize in selling laptops, phones, and headphones. If you have any questions, feel free to reach out to us using the form below or through our contact details.
+        Chào mừng đến với cửa hàng công nghệ HND! Cửa hàng chuyên bán
+        máy tính xách tay, điện thoại và tai nghe. Nếu bạn có bất kỳ câu hỏi
+        nào, vui lòng liên hệ với cửa hàng bằng biểu mẫu bên dưới hoặc thông
+        qua thông tin liên hệ của cửa hàng.
       </Typography>
       <Box sx={{ marginTop: "2rem" }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6">Store Information</Typography>
+            <Typography variant="h6">Thông tin cửa hàng</Typography>
             <Typography variant="body1">
-              <strong>Address:</strong> 123 Tech Street, Innovation City, Techland
+              <strong>Địa chỉ:</strong> Số 2 Nguyễn Đình Chiểu, TP. Nha Trang, Khánh Hòa
             </Typography>
             <Typography variant="body1">
-              <strong>Phone:</strong> +1 (123) 456-7890
+              <strong>Số điện thoại:</strong> +84 123 456 789
             </Typography>
             <Typography variant="body1">
-              <strong>Email:</strong> support@techstore.com
+              <strong>Email:</strong> duy.hn.63cntt@ntu.edu.vn
             </Typography>
             <Typography variant="body1">
-              <strong>Working Hours:</strong> Mon - Fri: 9:00 AM - 6:00 PM
+              <strong>Giờ làm việc:</strong> Thứ Hai - Thứ Sáu: 8:00 sáng - 6:00 chiều
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6">Send Us a Message</Typography>
+            <Typography variant="h6">Gửi tin nhắn cho chúng tôi</Typography>
             <form>
               <TextField
                 fullWidth
-                label="Your Name"
+                label="Tên của bạn"
                 variant="outlined"
                 margin="normal"
               />
               <TextField
                 fullWidth
-                label="Your Email"
+                label="Email của bạn"
                 variant="outlined"
                 margin="normal"
               />
               <TextField
                 fullWidth
-                label="Your Message"
+                label="Phản hồi của bạn"
                 variant="outlined"
                 margin="normal"
                 multiline
@@ -54,9 +57,8 @@ const Contact = () => {
                 variant="contained"
                 color="primary"
                 type="submit"
-                sx={{ marginTop: "1rem" }}
-              >
-                Submit
+                sx={{ marginTop: "1rem" }}>
+                Gửi
               </Button>
             </form>
           </Grid>

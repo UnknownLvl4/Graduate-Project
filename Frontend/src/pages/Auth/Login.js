@@ -75,20 +75,20 @@ function Login() {
         .then((response) => {
           if (!response.ok) {
             return response.json().then((data) => {
-              throw new Error(data.message || "Failed to login");
+              throw new Error(data.message || "Đăng nhập thất bại");
             });
           }
           return response.json();
         })
         .then((data) => {
-          console.log("Login successful:", data);
+          console.log("Đăng nhập thành công:", data);
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
           // Redirect to dashboard or home page
           window.location.href = "/";
         })
         .catch((error) => {
-          console.error("Login error:", error.message);
+          console.error("Lỗi đăng nhập:", error.message);
           setErrors((prev) => ({
             ...prev,
             identifier: error.message.includes("identifier")
@@ -97,7 +97,7 @@ function Login() {
             password: error.message.includes("password") ? error.message : "",
           }));
         });
-      console.log("Login form submitted:", formData);
+      console.log("Biểu mẫu đăng nhập đã được gửi:", formData);
     }
   };
 
@@ -106,12 +106,12 @@ function Login() {
       <Box sx={{ mt: 8, mb: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h4" component="h1" align="center" gutterBottom>
-            Login
+            Đăng nhập
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Email or Phone"
+              label="Email hoặc số điện thoại"
               name="identifier"
               type="text"
               value={formData.identifier}
@@ -123,7 +123,7 @@ function Login() {
             />
             <TextField
               fullWidth
-              label="Password"
+              label="Mật khẩu"
               name="password"
               type={showPassword ? "text" : "password"}
               value={formData.password}
@@ -154,18 +154,15 @@ function Login() {
               variant="contained"
               size="large"
               sx={{ mt: 3, mb: 2 }}>
-              Login
+              Đăng nhập
             </Button>
           </form>
           <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Link component={RouterLink} to="/forgot-password" variant="body2">
-              Forgot password?
-            </Link>
             <Box sx={{ mt: 2 }}>
               <Typography variant="body2">
-                Don't have an account?{" "}
+                Không có tài khoản?{" "}
                 <Link component={RouterLink} to="/register">
-                  Sign up
+                  Đăng ký
                 </Link>
               </Typography>
             </Box>

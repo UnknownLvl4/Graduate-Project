@@ -47,7 +47,7 @@ function AllProductsByCategory() {
             {category.name}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            <a href={`/products/${category.id}`}>See more</a>
+            <a href={`/products/${category.id}`}>Xem thêm</a>
           </Typography>
           <Grid container spacing={2}>
             {products
@@ -154,7 +154,7 @@ function AllProductsByCategory() {
                           sx={{ mt: 2 }}
                           fullWidth
                         >
-                          View Details
+                          Xem chi tiết
                         </Button>
                       </CardContent>
                     </Card>

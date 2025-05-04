@@ -68,10 +68,10 @@ function Cart() {
       const bill = await customerService.createBill(billData);
 
       if (paymentMethod === "banking") {
-        alert("Order placed successfully!");
+        alert("Phương thức thanh toán đã được xác nhận!");
         window.location.href = "/payment/" + bill.id;
       } else {
-        alert("Order placed successfully!");
+        alert("Đơn hàng đã được thanh toán thành công! Cảm ơn bạn đã mua hàng.");
         window.location.href = "/";
       }
     } catch (error) {

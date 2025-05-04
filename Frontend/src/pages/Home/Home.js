@@ -37,17 +37,17 @@ function Home() {
   const categories = [
     {
       id: 'LAP',
-      name: "Laptops",
+      name: "Laptop",
       image: "https://img.freepik.com/premium-vector/laptop-vector-mockup-647546_982290-58.jpg",
     },
     {
       id: 'PHN',
-      name: "Phones",
+      name: "Điện thoại",
       image: "https://img.freepik.com/free-vector/smart-phone-flat-style_78370-4084.jpg",
     },
     {
       id: 'HPH',
-      name: "Headphones",
+      name: "Tai nghe",
       image: "https://thumbs.dreamstime.com/b/headphone-black-icon-isolated-white-vector-illustration-flat-web-mobile-138372498.jpg",
     },
   ];
@@ -57,7 +57,7 @@ function Home() {
       <Carousel />
       <Container maxWidth="xl" sx={{ mt: 6 }}>
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-          Featured Products
+          Những sản phẩm nổi bật
         </Typography>
         <Grid container spacing={4} sx={{ mb: 6 }}>
           {featuredProducts.map((product) => {
@@ -155,7 +155,7 @@ function Home() {
                     to={`/product/${product.product_id}`}
                     sx={{ mt: 2 }}
                     fullWidth>
-                    View Details
+                    Xem chi tiết
                   </Button>
                 </CardContent>
               </Card>
@@ -165,7 +165,7 @@ function Home() {
         </Grid>
         {/* Categories */}
         <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-          Shop by Category
+          Mua sắm theo danh mục
         </Typography>
         <Grid container spacing={4} sx={{ mb: 6 }}>
           {categories.map((category) => (

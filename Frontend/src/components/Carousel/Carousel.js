@@ -22,7 +22,7 @@ const slides = [
     url: 'https://images.unsplash.com/photo-1468436139062-f60a71c5c892?auto=format&fit=crop&w=1920&h=600',
     title: 'Công nghệ tân tiến',
     description: 'Tăng năng suất làm việc của bạn',
-    buttonText: 'Xem Laptops',
+    buttonText: 'Xem Laptop',
     buttonLink: '/products?category=laptops',
   },
 ];

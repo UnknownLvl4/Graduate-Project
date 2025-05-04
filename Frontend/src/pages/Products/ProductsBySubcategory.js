@@ -161,7 +161,7 @@ function ProductsBySubcategory() {
                     sx={{ mt: 2 }}
                     fullWidth
                   >
-                    View Details
+                    Xem chi tiết
                   </Button>
                 </CardContent>
               </Card>
@@ -183,10 +183,10 @@ function ProductsBySubcategory() {
           disabled={currentPage === 1}
           sx={{ mr: 2 }}
         >
-          Previous
+          Trang trước
         </Button>
         <Typography variant="body1">
-          Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
+          Trang {currentPage} trên {Math.ceil(products.length / itemsPerPage)}
         </Typography>
         <Button
           variant="contained"
@@ -194,7 +194,7 @@ function ProductsBySubcategory() {
           disabled={currentPage === Math.ceil(products.length / itemsPerPage)}
           sx={{ ml: 2 }}
         >
-          Next
+          Trang sau
         </Button>
       </Box>
     </Container>

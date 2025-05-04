@@ -148,7 +148,7 @@ const DiscountSection = () => {
           variant="contained"
           onClick={() => handleOpenDialog()}
           sx={{ m: 2 }}>
-          Add Discount
+          Thêm giảm giá
         </Button>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -158,9 +158,9 @@ const DiscountSection = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Product Name</TableCell>
-              <TableCell>Discount Value (%)</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Tên sản phẩm</TableCell>
+              <TableCell>Giá trị giảm giá (%)</TableCell>
+              <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -197,12 +197,12 @@ const DiscountSection = () => {
         maxWidth="sm"
         fullWidth>
         <DialogTitle>
-          {selectedDiscount?.id ? "Edit Discount" : "Add Discount"}
+          {selectedDiscount?.id ? "Chỉnh sửa giảm giá" : "Chỉnh sửa giảm giá"}
         </DialogTitle>
         <DialogContent>
           <TextField
             name="product_id"
-            label="Product"
+            label="Sản phẩm"
             select
             value={selectedDiscount?.product_id || ""}
             onChange={handleInputChange}
@@ -216,7 +216,7 @@ const DiscountSection = () => {
           </TextField>
           <TextField
             name="value"
-            label="Discount Value (%)"
+            label="Giá trị giảm giá (%)"
             type="number"
             value={selectedDiscount?.value || 0}
             onChange={handleInputChange}
@@ -227,13 +227,13 @@ const DiscountSection = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} disabled={loading}>
-            Cancel
+            Hủy
           </Button>
           <Button
             onClick={handleSaveDiscount}
             variant="contained"
             disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Đang lưu..." : "Lưu"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -257,10 +257,10 @@ const DiscountSection = () => {
             borderRadius: 2,
           }}>
           <Typography id="modal-title" variant="h6" component="h2">
-            Confirm Deletion
+            Xác nhận xóa
           </Typography>
           <Typography id="modal-description" sx={{ mt: 2 }}>
-            Are you sure you want to delete this discount?
+          Bạn có chắc chắn muốn xóa giảm giá này không?
           </Typography>
           <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
             <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
@@ -271,7 +271,7 @@ const DiscountSection = () => {
               variant="contained"
               color="error"
               disabled={loading}>
-              {loading ? "Deleting..." : "Delete"}
+              {loading ? "Đang xóa..." : "Xóa"}
             </Button>
           </Box>
         </Box>

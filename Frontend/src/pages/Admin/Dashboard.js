@@ -161,7 +161,7 @@ function Dashboard() {
       !selectedItem.price ||
       !selectedItem.stock_quantity
     ) {
-      setError("Please fill in all required fields");
+      setError("Vui lòng điền vào tất cả các trường được yêu cầu");
       setLoading(false);
       return;
     }
@@ -181,20 +181,20 @@ function Dashboard() {
 
       // Validation
       if (!selectedItem.category_id.match(/^[A-Z]+$/)) {
-        throw new Error("Category ID must contain only uppercase letters");
+        throw new Error("Mã danh mục chỉ được chứa chữ in hoa");
       }
 
       // Validate product_id length
       if (selectedItem.product_id.length > 10) {
-        throw new Error("Product ID must not exceed 10 characters");
+        throw new Error("Mã sản phẩm không được vượt quá 10 ký tự");
       }
 
       if (selectedItem.price < 0) {
-        throw new Error("Price cannot be negative");
+        throw new Error("Giá tiền không được âm");
       }
 
       if (selectedItem.stock_quantity < 0) {
-        throw new Error("Stock quantity cannot be negative");
+        throw new Error("Số hàng trong kho không được âm");
       }
 
       if (
@@ -337,13 +337,13 @@ function Dashboard() {
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-        <Typography variant="h6">Products</Typography>
+        <Typography variant="h6">Sản phẩm</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
           disabled={loading}>
-          Add Product
+          Thêm sản phẩm
         </Button>
       </Box>
 
@@ -351,7 +351,7 @@ function Dashboard() {
         <TextField
           fullWidth
           variant="outlined"
-          label="Search products by ID or name"
+          label="Tìm kiếm sản phẩm theo tên hoặc mã sản phẩm"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           sx={{ bgcolor: "background.paper" }}
@@ -369,7 +369,7 @@ function Dashboard() {
           <CircularProgress />
         </Box>
       ) : filteredItems.length === 0 ? (
-        <Alert severity="info">No products found</Alert>
+        <Alert severity="info">Không sản phẩm nào được tìm thấy</Alert>
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -388,12 +388,12 @@ function Dashboard() {
                     }
                   />
                 </TableCell>
-                <TableCell>Category ID</TableCell>
-                <TableCell>Product ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Stock</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell>Mã danh mục</TableCell>
+                <TableCell>Mã sản phẩm</TableCell>
+                <TableCell>Tên sản phẩm</TableCell>
+                <TableCell>Giá tiền</TableCell>
+                <TableCell>Số lượng trong kho</TableCell>
+                <TableCell>Hành động</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -419,7 +419,9 @@ function Dashboard() {
                     <TableCell>{item.category_id}</TableCell>
                     <TableCell>{item.product_id}</TableCell>
                     <TableCell>{item.product_name}</TableCell>
-                    <TableCell>${item.price}</TableCell>
+                    <TableCell>
+                      {parseInt(item.price).toLocaleString()} VND
+                    </TableCell>
                     <TableCell>{item.stock_quantity}</TableCell>
                     <TableCell>
                       <IconButton
@@ -429,19 +431,19 @@ function Dashboard() {
                           )
                         }
                         disabled={loading}
-                        title="View Details">
+                        title="Xem chi tiết">
                         <VisibilityIcon />
                       </IconButton>
                       <IconButton
                         onClick={() => handleOpenDialog(item)}
                         disabled={loading}
-                        title="Edit">
+                        title="Chinh sửa">
                         <EditIcon />
                       </IconButton>
                       <IconButton
                         onClick={() => handleDeleteClick(item)}
                         disabled={loading}
-                        title="Delete">
+                        title="Xóa">
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -474,7 +476,7 @@ function Dashboard() {
           <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               name="category_id"
-              label="Category ID"
+              label="Mã danh mục"
               value={selectedItem?.category_id || ""}
               onChange={handleInputChange}
               fullWidth
@@ -482,13 +484,13 @@ function Dashboard() {
               error={error && !selectedItem?.category_id}
               helperText={
                 error && !selectedItem?.category_id
-                  ? "Category ID is required"
+                  ? "Mã danh mục bắt buộc phải có"
                   : ""
               }
             />
             <TextField
               name="product_id"
-              label="Product ID"
+              label="Mã sản phẩm"
               value={selectedItem?.product_id || ""}
               onChange={handleInputChange}
               fullWidth
@@ -496,13 +498,13 @@ function Dashboard() {
               error={error && !selectedItem?.product_id}
               helperText={
                 error && !selectedItem?.product_id
-                  ? "Product ID is required"
+                  ? "Mã sản phẩm bắt buộc phải có"
                   : ""
               }
             />
             <TextField
               name="product_name"
-              label="Product Name"
+              label="Tên sản phẩm"
               value={selectedItem?.product_name || ""}
               onChange={handleInputChange}
               fullWidth
@@ -510,13 +512,13 @@ function Dashboard() {
               error={error && !selectedItem?.product_name}
               helperText={
                 error && !selectedItem?.product_name
-                  ? "Product name is required"
+                  ? "Tên sản phẩm bắt buộc phải có"
                   : ""
               }
             />
             <TextField
               name="description"
-              label="Description"
+              label="Mô tả"
               value={selectedItem?.description || ""}
               onChange={handleInputChange}
               fullWidth
@@ -525,23 +527,23 @@ function Dashboard() {
             />
             <TextField
               name="price"
-              label="Price"
+              label="Giá"
               type="number"
               value={selectedItem?.price || ""}
               onChange={handleInputChange}
               fullWidth
               required
               InputProps={{
-                startAdornment: <span>$</span>,
+                startAdornment: <span>VND</span>,
               }}
               error={error && !selectedItem?.price}
               helperText={
-                error && !selectedItem?.price ? "Price is required" : ""
+                error && !selectedItem?.price ? "Giá tiền bắt buộc phải có" : ""
               }
             />
             <TextField
               name="stock_quantity"
-              label="Stock"
+              label="Số lượng hàng trong kho"
               type="number"
               value={selectedItem?.stock_quantity || ""}
               onChange={handleInputChange}
@@ -550,7 +552,7 @@ function Dashboard() {
               error={error && !selectedItem?.stock_quantity}
               helperText={
                 error && !selectedItem?.stock_quantity
-                  ? "Stock is required"
+                  ? "Số lượng hàng trong kho bắt buộc phải có"
                   : ""
               }
             />
@@ -564,14 +566,14 @@ function Dashboard() {
               />
               <label htmlFor="image-file">
                 <Button variant="contained" component="span">
-                  Choose Image
+                  Chọn ảnh
                 </Button>
               </label>
               {selectedItem?.image && (
                 <Box sx={{ mt: 2 }}>
                   <img
                     src={selectedItem.image || ""}
-                    alt="Preview"
+                    alt="Xem trước"
                     style={{ maxWidth: "100%", maxHeight: "200px" }}
                   />
                 </Box>
@@ -580,12 +582,12 @@ function Dashboard() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
           <Button
             onClick={handleSaveProduct}
             variant="contained"
             disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Đang lưu..." : "Lưu"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -593,14 +595,14 @@ function Dashboard() {
       <Dialog
         open={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle>Xác nhận xóa sản phẩm</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this product?
+          Bạn có chắc chắn muốn xóa sản phẩm này không?
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteConfirmOpen(false)}>Cancel</Button>
+          <Button onClick={() => setDeleteConfirmOpen(false)}>Hủy</Button>
           <Button onClick={handleDelete} color="error">
-            Delete
+            Xóa
           </Button>
         </DialogActions>
       </Dialog>
@@ -617,10 +619,10 @@ function Dashboard() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
+              <TableCell>Tên người dùng</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Vai trò</TableCell>
+              <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -687,15 +689,32 @@ function Dashboard() {
       maxWidth="sm"
       fullWidth>
       <DialogTitle>
-        {selectedItem ? `Edit ${dialogType}` : `Add ${dialogType}`}
+        {selectedItem?.product_id
+          ? `Chỉnh sửa ${dialogType}`
+          : `Thêm ${dialogType}`}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
           {dialogType === "product" && (
             <>
               <TextField
+                name="product_id"
+                label="Mã sản phẩm"
+                value={selectedItem?.product_id || ""}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                disabled={!!selectedItem?.product_id}
+                error={error && !selectedItem?.product_id}
+                helperText={
+                  error && !selectedItem?.product_id
+                    ? "Mã sản phẩm bắt buộc phải có"
+                    : ""
+                }
+              />
+              <TextField
                 name="category_id"
-                label="Category ID"
+                label="Mã danh mục"
                 value={selectedItem?.category_id || ""}
                 onChange={handleInputChange}
                 fullWidth
@@ -703,27 +722,27 @@ function Dashboard() {
                 error={error && !selectedItem?.category_id}
                 helperText={
                   error && !selectedItem?.category_id
-                    ? "Category ID is required"
+                    ? "Mã danh mục bắt buộc phải có"
                     : ""
                 }
               />
               <TextField
-                name="product_id"
-                label="Product ID"
-                value={selectedItem?.product_id || ""}
+                name="sub_category_id"
+                label="Mã danh mục phụ"
+                value={selectedItem?.sub_category_id || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
-                error={error && !selectedItem?.product_id}
+                error={error && !selectedItem?.sub_category_id}
                 helperText={
-                  error && !selectedItem?.product_id
-                    ? "Product ID is required"
+                  error && !selectedItem?.sub_category_id
+                    ? "Mã danh mục phụ bắt buộc phải có"
                     : ""
                 }
               />
               <TextField
                 name="product_name"
-                label="Product Name"
+                label="Tên sản phẩm"
                 value={selectedItem?.product_name || ""}
                 onChange={handleInputChange}
                 fullWidth
@@ -731,13 +750,13 @@ function Dashboard() {
                 error={error && !selectedItem?.product_name}
                 helperText={
                   error && !selectedItem?.product_name
-                    ? "Product Name is required"
+                    ? "Tên sản phẩm bắt buộc phải có"
                     : ""
                 }
               />
               <TextField
                 name="description"
-                label="Description"
+                label="Mô tả"
                 value={selectedItem?.description || ""}
                 onChange={handleInputChange}
                 fullWidth
@@ -746,23 +765,25 @@ function Dashboard() {
               />
               <TextField
                 name="price"
-                label="Price"
+                label="Giá"
                 type="number"
                 value={selectedItem?.price || ""}
                 onChange={handleInputChange}
                 fullWidth
                 required
                 InputProps={{
-                  startAdornment: <span>$</span>,
+                  startAdornment: <span>VND</span>,
                 }}
                 error={error && !selectedItem?.price}
                 helperText={
-                  error && !selectedItem?.price ? "Price is required" : ""
+                  error && !selectedItem?.price
+                    ? "Giá tiền bắt buộc phải có"
+                    : ""
                 }
               />
               <TextField
                 name="stock_quantity"
-                label="Stock"
+                label="Số lượng hàng trong kho"
                 type="number"
                 value={selectedItem?.stock_quantity || ""}
                 onChange={handleInputChange}
@@ -771,7 +792,7 @@ function Dashboard() {
                 error={error && !selectedItem?.stock_quantity}
                 helperText={
                   error && !selectedItem?.stock_quantity
-                    ? "Stock is required"
+                    ? "Số lượng hàng trong kho bắt buộc phải có"
                     : ""
                 }
               />
@@ -785,14 +806,14 @@ function Dashboard() {
                 />
                 <label htmlFor="image-file">
                   <Button variant="contained" component="span">
-                    Choose Image
+                    Chọn ảnh
                   </Button>
                 </label>
                 {selectedItem?.image && (
                   <Box sx={{ mt: 2 }}>
                     <img
                       src={selectedItem.image || ""}
-                      alt="Preview"
+                      alt="Xem trước"
                       style={{ maxWidth: "100%", maxHeight: "200px" }}
                     />
                   </Box>
@@ -804,7 +825,7 @@ function Dashboard() {
             <>
               <TextField
                 name="firstName"
-                label="First Name"
+                label="Tên"
                 value={selectedItem?.firstName || ""}
                 onChange={handleInputChange}
                 fullWidth
@@ -812,7 +833,7 @@ function Dashboard() {
               />
               <TextField
                 name="lastName"
-                label="Last Name"
+                label="Họ và tên đệm"
                 value={selectedItem?.lastName || ""}
                 onChange={handleInputChange}
                 fullWidth
@@ -829,14 +850,14 @@ function Dashboard() {
               />
               <TextField
                 name="isAdmin"
-                label="Role"
+                label="Vai trò"
                 select
                 value={selectedItem?.isAdmin || false}
                 onChange={handleInputChange}
                 fullWidth
                 required>
                 <MenuItem value={true}>Admin</MenuItem>
-                <MenuItem value={false}>Customer</MenuItem>
+                <MenuItem value={false}>Khách hàng</MenuItem>
               </TextField>
             </>
           )}
@@ -844,7 +865,7 @@ function Dashboard() {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDialog} disabled={loading}>
-          Cancel
+          Hủy
         </Button>
         <Button
           onClick={
@@ -852,7 +873,7 @@ function Dashboard() {
           }
           variant="contained"
           disabled={loading}>
-          {loading ? "Saving..." : "Save"}
+          {loading ? "Đang lưu..." : "Lưu"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -863,20 +884,20 @@ function Dashboard() {
     <Dialog
       open={deleteConfirmOpen}
       onClose={() => setDeleteConfirmOpen(false)}>
-      <DialogTitle>Confirm Delete</DialogTitle>
+      <DialogTitle>Xác nhận xóa</DialogTitle>
       <DialogContent>
-        Are you sure you want to delete this {dialogType}?
+        Bạn có chắc chắn muốn xóa sản phẩm này không?
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setDeleteConfirmOpen(false)} disabled={loading}>
-          Cancel
+          Hủy
         </Button>
         <Button
           onClick={handleDelete}
           color="error"
           variant="contained"
           disabled={loading}>
-          {loading ? "Deleting..." : "Delete"}
+          {loading ? "Đang xóa..." : "Xóa"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -897,7 +918,7 @@ function Dashboard() {
               variant="h4"
               color="primary"
               gutterBottom>
-              Admin Dashboard
+              Trang Admin
             </Typography>
           </Paper>
         </Grid>

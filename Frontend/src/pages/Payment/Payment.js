@@ -33,7 +33,7 @@ const Payment = () => {
   return (
     <Container sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Payment for Bill #{billId}
+        Thanh toán cho đơn hàng #{billId}
       </Typography>
       <Typography variant="body1" gutterBottom>
         Vui lòng thanh toán hóa đơn của bạn bằng cách quét mã QR bên dưới.

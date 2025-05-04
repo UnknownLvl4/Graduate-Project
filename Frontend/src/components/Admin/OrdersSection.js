@@ -96,7 +96,7 @@ const OrdersSection = ({ items, fetchData }) => {
       <div style={{ marginBottom: "16px" }}>
         <TextField
           type="date"
-          label="Filter by Date"
+          label="Lọc theo ngày"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
         />
@@ -106,12 +106,12 @@ const OrdersSection = ({ items, fetchData }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell>Total</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Mã đơn hàng</TableCell>
+              <TableCell>Người dùng</TableCell>
+              <TableCell>Tổng tiền</TableCell>
+              <TableCell>Trạng thái</TableCell>
+              <TableCell>Ngày đặt</TableCell>
+              <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -167,11 +167,11 @@ const OrdersSection = ({ items, fetchData }) => {
         onClose={handleCloseDialog}
         maxWidth="sm"
         fullWidth>
-        <DialogTitle>Edit Order</DialogTitle>
+        <DialogTitle>Chỉnh sửa đơn hàng</DialogTitle>
         <DialogContent>
           <TextField
             name="status"
-            label="Status"
+            label="Trạng thái"
             select
             value={selectedOrder?.status || ""}
             onChange={handleInputChange}
@@ -188,13 +188,13 @@ const OrdersSection = ({ items, fetchData }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} disabled={loading}>
-            Cancel
+            Hủy
           </Button>
           <Button
             onClick={handleSaveOrder}
             variant="contained"
             disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Đang lưu..." : "Lưu"}
           </Button>
         </DialogActions>
       </Dialog>

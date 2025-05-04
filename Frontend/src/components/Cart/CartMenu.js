@@ -56,8 +56,7 @@ function CartMenu() {
         aria-label="cart"
         onClick={(event) =>
           setCartAnchorEl(cartAnchorEl ? null : event.currentTarget)
-        }
-      >
+        }>
         <Badge badgeContent={cartItems.length} color="secondary">
           <ShoppingCartIcon />
         </Badge>
@@ -77,11 +76,10 @@ function CartMenu() {
         }}
         PaperProps={{
           sx: { width: "350px", maxWidth: "100%" },
-        }}
-      >
+        }}>
         <Box p={2}>
           <Typography variant="h6" gutterBottom>
-            Shopping Cart ({cartItems.length} items)
+            Giỏ hàng ({cartItems.length} sản phẩm)
           </Typography>
           {cartItems.map((item) => {
             const discount = discounts.find(
@@ -89,7 +87,9 @@ function CartMenu() {
             ); // Find the discount for the product
 
             const discountedPrice = discount
-              ? parseFloat(item.price * (1 - discount.value / 100)).toLocaleString()
+              ? parseFloat(
+                  item.price * (1 - discount.value / 100)
+                ).toLocaleString()
               : item.price.toLocaleString();
 
             return (
@@ -101,8 +101,7 @@ function CartMenu() {
                   alignItems: "center",
                   paddingLeft: 0.5,
                   position: "relative",
-                }}
-              >
+                }}>
                 {discount && (
                   <Typography
                     variant="body2"
@@ -116,8 +115,7 @@ function CartMenu() {
                       padding: "4px 8px",
                       borderRadius: "4px",
                       fontWeight: "bold",
-                    }}
-                  >
+                    }}>
                     {discount.value}% OFF
                   </Typography>
                 )}
@@ -135,8 +133,7 @@ function CartMenu() {
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
-                    }}
-                  >
+                    }}>
                     <Typography
                       variant="subtitle2"
                       noWrap
@@ -147,15 +144,13 @@ function CartMenu() {
                       }}
                       component={RouterLink}
                       to={`/product/${item.product_id}`}
-                      onClick={() => setCartAnchorEl(null)}
-                    >
+                      onClick={() => setCartAnchorEl(null)}>
                       {item.product_name}
                     </Typography>
                     <IconButton
                       size="small"
                       onClick={() => handleRemoveFromCart(item.id)}
-                      sx={{ ml: 1, p: 0.5 }}
-                    >
+                      sx={{ ml: 1, p: 0.5 }}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Box>
@@ -166,8 +161,7 @@ function CartMenu() {
                           style={{
                             color: "red",
                             fontWeight: "bold",
-                          }}
-                        >
+                          }}>
                           {discountedPrice} VND
                         </span>
                       </>
@@ -177,8 +171,7 @@ function CartMenu() {
                         style={{
                           color: "red",
                           fontWeight: "bold",
-                        }}
-                      >
+                        }}>
                         {item.price.toLocaleString()} VND
                       </span>
                     )}
@@ -192,8 +185,7 @@ function CartMenu() {
             fullWidth
             component={RouterLink}
             to="/cart"
-            onClick={() => setCartAnchorEl(null)}
-          >
+            onClick={() => setCartAnchorEl(null)}>
             Thanh toán
           </Button>
         </Box>
