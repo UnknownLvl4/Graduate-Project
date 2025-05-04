@@ -197,7 +197,7 @@ const DiscountSection = () => {
         maxWidth="sm"
         fullWidth>
         <DialogTitle>
-          {selectedDiscount?.id ? "Chỉnh sửa giảm giá" : "Chỉnh sửa giảm giá"}
+          {selectedDiscount?.id ? "Chỉnh sửa giảm giá" : "Thêm giảm giá"}
         </DialogTitle>
         <DialogContent>
           <TextField

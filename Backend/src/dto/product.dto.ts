@@ -1,10 +1,27 @@
-import { IsString, IsNumber, IsOptional, Min, Matches, IsNotEmpty, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  Min,
+  Matches,
+  IsNotEmpty,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[A-Z]+$/, { message: 'Category ID must contain only uppercase letters' })
+  @Matches(/^[A-Z]+$/, {
+    message: 'Category ID must contain only uppercase letters',
+  })
   category_id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[A-Z]+$/, {
+    message: 'Category ID must contain only uppercase letters',
+  })
+  sub_category_id: string;
 
   @IsString()
   @IsNotEmpty()
@@ -33,8 +50,17 @@ export class CreateProductDto {
 export class UpdateProductDto implements Partial<CreateProductDto> {
   @IsString()
   @IsOptional()
-  @Matches(/^[A-Z]+$/, { message: 'Category ID must contain only uppercase letters' })
+  @Matches(/^[A-Z]+$/, {
+    message: 'Category ID must contain only uppercase letters',
+  })
   category_id?: string;
+
+  @IsString()
+  @IsOptional()
+  @Matches(/^[A-Z]+$/, {
+    message: 'Category ID must contain only uppercase letters',
+  })
+  sub_category_id?: string;
 
   @IsString()
   @IsOptional()

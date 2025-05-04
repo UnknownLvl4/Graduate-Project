@@ -57,7 +57,7 @@ function Dashboard() {
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState("product");
+  const [dialogType, setDialogType] = useState("sản phẩm");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -112,7 +112,7 @@ function Dashboard() {
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
     setDialogType(
-      newValue === 0 ? "product" : newValue === 1 ? "order" : "user"
+      newValue === 0 ? "sản phẩm" : newValue === 1 ? "order" : "user"
     );
     setPage(0);
   };
@@ -156,6 +156,7 @@ function Dashboard() {
     // Validate required fields
     if (
       !selectedItem.category_id ||
+      !selectedItem.sub_category_id ||
       !selectedItem.product_id ||
       !selectedItem.product_name ||
       !selectedItem.price ||
@@ -169,6 +170,7 @@ function Dashboard() {
     try {
       const productData = {
         category_id: selectedItem.category_id,
+        sub_category_id: selectedItem.sub_category_id,
         product_id: selectedItem.product_id,
         product_name: selectedItem.product_name,
         description: selectedItem.description || "",
@@ -243,7 +245,7 @@ function Dashboard() {
     setError(null);
     try {
       switch (dialogType) {
-        case "product":
+        case "sản phẩm":
           await adminService.deleteProduct(
             itemToDelete.category_id,
             itemToDelete.product_id
@@ -689,13 +691,13 @@ function Dashboard() {
       maxWidth="sm"
       fullWidth>
       <DialogTitle>
-        {selectedItem?.product_id
+        {(selectedItem?.product_id || selectedItem?.id)
           ? `Chỉnh sửa ${dialogType}`
           : `Thêm ${dialogType}`}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          {dialogType === "product" && (
+          {dialogType === "sản phẩm" && (
             <>
               <TextField
                 name="product_id"
@@ -869,7 +871,7 @@ function Dashboard() {
         </Button>
         <Button
           onClick={
-            dialogType === "product" ? handleSaveProduct : handleSaveUser
+            dialogType === "sản phẩm" ? handleSaveProduct : handleSaveUser
           }
           variant="contained"
           disabled={loading}>

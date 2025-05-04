@@ -107,7 +107,6 @@ const StatisticSection = () => {
               InputLabelProps={{ shrink: true }}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              fullWidth
             />
             <TextField
               type="date"
@@ -115,10 +114,9 @@ const StatisticSection = () => {
               InputLabelProps={{ shrink: true }}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              fullWidth
             />
             <Button variant="contained" onClick={filterOrdersByDateRange}>
-              Lọc
+              Xem thống kê
             </Button>
           </Box>
           {Object.keys(filteredData).length > 0 ? (
