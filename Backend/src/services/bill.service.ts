@@ -29,7 +29,10 @@ export class BillService {
       const items = await this.billItemsRepository.find({
         where: { bill_id: bill.id },
       });
-      bill.total = items.reduce((acc, item) => acc + item.price, 0);
+      bill.total = items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0,
+      );
     }
     return bills;
   }
@@ -44,15 +47,65 @@ export class BillService {
   }
 
   async update(billId: string, billData: { status: string }): Promise<Bill> {
-    await this.billRepository.update(billId, billData);
+    // Fetch the current bill
     const bill = await this.billRepository.findOne({ where: { id: billId } });
     if (!bill) {
       throw new Error(`Bill with ID ${billId} not found`);
     }
-    return bill;
+    const prevStatus = bill.status;
+    const newStatus = billData.status;
+
+    // Only handle stock if status changes involve 'Cancelled'
+    if (prevStatus !== newStatus) {
+      const billItems = await this.billItemsRepository.find({ where: { bill_id: billId } });
+      if (prevStatus !== 'Cancelled' && newStatus === 'Cancelled') {
+        // Add back stock if changing to cancel
+        for (const item of billItems) {
+          const product = await this.productService.findById(item.product_id);
+          if (product) {
+            product.stock_quantity += item.quantity;
+            await this.productService.update(product.product_id, product);
+          }
+        }
+      } else if (prevStatus === 'Cancelled' && newStatus !== 'Cancelled') {
+        // Subtract stock if changing from cancel to not cancel
+        for (const item of billItems) {
+          const product = await this.productService.findById(item.product_id);
+          if (product) {
+            if (product.stock_quantity < item.quantity) {
+              throw new BadRequestException(
+                `Không đủ số lượng sản phẩm cho ${product.product_name}. Hiện tại còn ${product.stock_quantity} sản phẩm`
+              );
+            }
+            product.stock_quantity -= item.quantity;
+            await this.productService.update(product.product_id, product);
+          }
+        }
+      }
+    }
+    // Update the bill status
+    await this.billRepository.update(billId, billData);
+    const updatedBill = await this.billRepository.findOne({ where: { id: billId } });
+    if (!updatedBill) {
+      throw new Error(`Bill with ID ${billId} not found after update`);
+    }
+    return updatedBill;
   }
 
   async delete(billId: string): Promise<{ message: string }> {
+    // Fetch all bill items for this bill
+    const billItems = await this.billItemsRepository.find({
+      where: { bill_id: billId },
+    });
+    // For each bill item, add back the quantity to the product's stock
+    for (const item of billItems) {
+      const product = await this.productService.findById(item.product_id);
+      if (product) {
+        product.stock_quantity += item.quantity;
+        await this.productService.update(product.product_id, product);
+      }
+    }
+    // Delete the bill and its items
     await this.billRepository.delete(billId);
     return { message: 'Bill deleted successfully' };
   }
