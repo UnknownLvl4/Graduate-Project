@@ -60,6 +60,11 @@ export const getOrders = async () => {
 
 export const updateOrder = (id, data) => axios.put(`${API_URL}/bills/${id}`, data);
 
+// Bill Items
+export const getOrderItems = async () => {
+  return axios.get(`${API_URL}/bill-items`);
+};
+
 // Users
 export const getUsers = async () => {
   return axios.get(`${API_URL}/users`);

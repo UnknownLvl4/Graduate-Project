@@ -83,7 +83,7 @@ function Cart() {
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom sx={{ mt: 4 }}>
-        Thanh toán giỏ hàng
+        Giỏ hàng của bạn
       </Typography>
       <List>
         {cartItems.map((item) => (
