@@ -131,24 +131,24 @@ function Register() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Tên"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
                   label="Họ và tên đệm"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
                   error={!!errors.lastName}
                   helperText={errors.lastName}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Tên"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName}
                   required
                 />
               </Grid>
@@ -163,6 +163,29 @@ function Register() {
                   error={!!errors.email}
                   helperText={errors.email}
                   required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Số điện thoại"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  error={!!errors.phone}
+                  helperText={errors.phone}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Địa chỉ"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  multiline
+                  rows={3}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -221,29 +244,6 @@ function Register() {
                       </InputAdornment>
                     ),
                   }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Số điện thoại"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  error={!!errors.phone}
-                  helperText={errors.phone}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Địa chỉ"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  multiline
-                  rows={3}
                 />
               </Grid>
             </Grid>
