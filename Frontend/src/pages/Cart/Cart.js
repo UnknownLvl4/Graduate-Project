@@ -76,6 +76,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error creating bill:", error);
+      alert(error.response.data.message);
     }
   };
 

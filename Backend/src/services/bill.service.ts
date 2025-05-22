@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Bill } from '../entities/bill.entity';
@@ -63,6 +63,20 @@ export class BillService {
     if (!cart) {
       throw new Error('Cart not found for user');
     }
+
+    for (const item of cart) {
+      const product = await this.productService.findById(item.product_id);
+      if (!product) {
+        throw new BadRequestException(
+          `Product with ID ${item.product_id} not found`,
+        );
+      }
+      if (product.stock_quantity < item.quantity) {
+        throw new BadRequestException(
+          `Không đủ số lượng sản phẩm cho ${product.product_name}. Hiện tại còn ${product.stock_quantity} sản phẩm`,
+        );
+      }
+    }
     // create a new Bill from the Cart
     const newBill = this.billRepository.create({
       id: crypto.randomUUID(),
@@ -79,12 +93,11 @@ export class BillService {
       cart.map((item) => ({
         ...item,
         price:
-          item.quantity *
-          ((item.price *
+          (item.price *
             (100 -
-              (discounts.find((d) => d.product_id === item.product_id)?.value ?? 0) ||
-              0)) /
-            100),
+              (discounts.find((d) => d.product_id === item.product_id)?.value ??
+                0) || 0)) /
+          100,
         bill_id: newBill.id,
         id: crypto.randomUUID(),
       })),
