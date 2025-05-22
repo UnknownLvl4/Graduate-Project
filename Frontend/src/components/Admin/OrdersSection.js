@@ -129,7 +129,28 @@ const OrdersSection = ({ items, fetchData }) => {
                 <TableCell>
                   {parseInt(item.total).toLocaleString()} VND
                 </TableCell>
-                <TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: (() => {
+                      switch (item.status) {
+                        case "Pending":
+                          return "#fff3cd"; // light yellow
+                        case "Processing":
+                          return "#cce5ff"; // light blue
+                        case "Shipped":
+                          return "#d1ecf1"; // light cyan
+                        case "Delivered":
+                          return "#d4edda"; // light green
+                        case "Cancelled":
+                          return "#f8d7da"; // light red
+                        default:
+                          return "#f5f5f5"; // light gray
+                      }
+                    })(),
+                    color: "#333",
+                    fontWeight: 500,
+                  }}
+                >
                   {(() => {
                     switch (item.status) {
                       case "Pending":
