@@ -264,7 +264,7 @@ const DiscountSection = () => {
           </Typography>
           <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
             <Button onClick={handleCloseModal} sx={{ mr: 2 }}>
-              Cancel
+              Hủy
             </Button>
             <Button
               onClick={handleDeleteDiscount}
