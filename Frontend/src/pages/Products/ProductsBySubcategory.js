@@ -38,6 +38,7 @@ function ProductsBySubcategory() {
     };
 
     fetchProducts();
+    setCurrentPage(1); // Reset to the first page when category or subcategory changes
   }, [category, sub_category]);
 
   // Calculate the products to display on the current page
