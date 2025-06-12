@@ -633,6 +633,19 @@ function Dashboard() {
     }
   };
 
+  const CATEGORY_IDS = ["LAP", "PHN", "HPH"];
+  const SUB_CATEGORY_IDS = [
+    "GAME",
+    "OFFICE",
+    "STUDENT",
+    "5G",
+    "4G",
+    "FOLD",
+    "WIRELESS",
+    "GHPH",
+    "SPORT"
+  ];
+
   const renderDialog = () => (
     <Dialog
       open={openDialog}
@@ -670,10 +683,17 @@ function Dashboard() {
                 onChange={handleInputChange}
                 fullWidth
                 required
-                error={error && !selectedItem?.category_id}
+                error={
+                  (error && !selectedItem?.category_id) ||
+                  (selectedItem?.category_id &&
+                    !CATEGORY_IDS.includes(selectedItem.category_id))
+                }
                 helperText={
                   error && !selectedItem?.category_id
                     ? "Mã danh mục bắt buộc phải có"
+                    : selectedItem?.category_id &&
+                      !CATEGORY_IDS.includes(selectedItem.category_id)
+                    ? "Giá trị không hợp lệ"
                     : ""
                 }
               />
@@ -684,10 +704,17 @@ function Dashboard() {
                 onChange={handleInputChange}
                 fullWidth
                 required
-                error={error && !selectedItem?.sub_category_id}
+                error={
+                  (error && !selectedItem?.sub_category_id) ||
+                  (selectedItem?.sub_category_id &&
+                    !SUB_CATEGORY_IDS.includes(selectedItem.sub_category_id))
+                }
                 helperText={
                   error && !selectedItem?.sub_category_id
                     ? "Mã danh mục phụ bắt buộc phải có"
+                    : selectedItem?.sub_category_id &&
+                      !SUB_CATEGORY_IDS.includes(selectedItem.sub_category_id)
+                    ? "Giá trị không hợp lệ"
                     : ""
                 }
               />
