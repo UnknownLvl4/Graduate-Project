@@ -57,6 +57,7 @@ function Dashboard() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState("sản phẩm");
+  const [dialogMode, setDialogMode] = useState("create");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
@@ -115,19 +116,22 @@ function Dashboard() {
   };
 
   const handleOpenDialog = (item = null) => {
-    setSelectedItem(
-      item
-        ? { ...item }
-        : {
-            category_id: "",
-            product_id: "",
-            product_name: "",
-            description: "",
-            price: "",
-            stock_quantity: "",
-            image: "",
-          }
-    );
+    if (item) {
+      setSelectedItem({ ...item });
+      setDialogMode("edit");
+    } else {
+      setSelectedItem({
+        category_id: "",
+        product_id: "",
+        sub_category_id: "",
+        product_name: "",
+        description: "",
+        price: "",
+        stock_quantity: "",
+        image: "",
+      });
+      setDialogMode("create");
+    }
     setOpenDialog(true);
   };
 
@@ -135,6 +139,7 @@ function Dashboard() {
     setSelectedItem(null);
     setOpenDialog(false);
     setError(null);
+    setDialogMode("create");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -429,7 +434,9 @@ function Dashboard() {
         maxWidth="sm"
         fullWidth>
         <DialogTitle>
-          {selectedItem ? "Edit Product" : "Add Product"}
+          {dialogMode === "edit"
+            ? `Chỉnh sửa ${dialogType}`
+            : `Thêm ${dialogType}`}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -633,7 +640,7 @@ function Dashboard() {
       maxWidth="sm"
       fullWidth>
       <DialogTitle>
-        {selectedItem?.product_id || selectedItem?.id
+        {dialogMode === "edit"
           ? `Chỉnh sửa ${dialogType}`
           : `Thêm ${dialogType}`}
       </DialogTitle>
@@ -648,7 +655,7 @@ function Dashboard() {
                 onChange={handleInputChange}
                 fullWidth
                 required
-                disabled={!!selectedItem?.product_id}
+                disabled={dialogMode === "edit" && !!selectedItem?.product_id}
                 error={error && !selectedItem?.product_id}
                 helperText={
                   error && !selectedItem?.product_id
